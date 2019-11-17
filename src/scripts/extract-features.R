@@ -51,6 +51,9 @@ remove_cols <- function(feat_name, unwanted_cols){
 
 # extract all features that are present in all waves/suffix
 extract_features_with_suffix <- function(data_df, suffix){
+  feature_list <<- list()
+  cols_to_remove <<- list()
+  mutated_cols_to_remove <<- list()
   col_names <- names(data_df)
   #select features with suffix
   map(col_names, select_features)

@@ -17,15 +17,25 @@ suffix <- "(_s0|_s1|_s2)"
 sample_df <- ship_dataset
 
 #removing data without labels
-sample_df_with_labels <- data_with_labels(sample_df)
+sample_df <- data_with_labels(sample_df)
+
+#Extraction of labels
+sample_df_label_column <- only_labels(sample_df)
 
 # extract features in all waves
-sample_df <- extract_features_with_suffix(sample_df_with_labels, suffix)
+sample_df <- extract_features_with_suffix(sample_df, suffix)
 
-str(sample_df)
 # factor timestamp column for exdate_ship
 col_name = "exdate_ship"
 col_name_1 = "blt_beg"
 sample_df <- factor_timestamp(sample_df, col_name)
 sample_df <- factor_hms (sample_df, col_name_1)
 
+#Extracting evolution features
+evo_features <- Evoxploit$new(sample_df, sample_df_label_column[[1]], wave_suffix = "_s")
+
+summary(evo_features)
+evo_all_features <- evo_features$all_features
+
+#extracting evolution_features for all waves
+sample_df_for_evo <- extract_features_with_suffix(evo_all_features, suffix)
