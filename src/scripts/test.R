@@ -28,6 +28,7 @@ sample_df <- extract_features_with_suffix(sample_df, suffix)
 # factor timestamp column for exdate_ship
 col_name = "exdate_ship"
 col_name_1 = "blt_beg"
+col_name_2="liver_fat"
 sample_df <- factor_timestamp(sample_df, col_name)
 sample_df <- factor_hms (sample_df, col_name_1)
 
@@ -40,15 +41,30 @@ evo_all_features <- evo_features$all_features
 #extracting evolution_features for all waves
 sample_df_for_evo <- extract_features_with_suffix(evo_all_features, suffix)
 
+#Grouping by gender
+group_by_male <- subset(sample_df_for_evo, female_s0==0)
+group_by_female <- subset(sample_df_for_evo, female_s0==1)
+sample_df_for_evo_compare <- gender_group_compare (group_by_male, group_by_female)
+
 #appending output 
-sample_df_for_evo_withcL <- cbind(stand_sample_df_for_evoo,sample_df_label_column)
+sample_df_for_evo_withcL <- cbind(sample_df_for_evo,sample_df_label_column)
+
+#factoring liver_fat column
+sample_df_for_evo_withcL_factored <- factor_liver_fat (sample_df_for_evo_withcL, col_name_2)  
+
+
+
+
+
 
 
 #scaling evolution_features for all waves
-stand_sample_df_for_evo <- sample_df_for_evo%>%
-  mutate_at(vars(names(sample_df_for_evo)[which(sapply(sample_df_for_evo, is.numeric))])
-            ,(function(x) return((x - min(x)) / (max(x) - min(x)))))
+#stand_sample_df_for_evo <- sample_df_for_evo%>%
+  #mutate_at(vars(names(sample_df_for_evo)[which(sapply(sample_df_for_evo, is.numeric))])                                         
+         #   ,(function(x) return((x - min(x)) / (max(x) - min(x)))))
 
-str(sample_df_for_evo$smoking_s0)
+#str(sample_df_for_evo$smoking_s0)
+
+               
 
 
