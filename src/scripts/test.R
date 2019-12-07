@@ -5,7 +5,9 @@ library(checkmate)
 library(rlist)
 library(hash)
 library(hms)
-
+library(ggplot2)
+library(visdat)
+library(naniar)
 source('./scripts/extract-features.R')
 source('./scripts/factor-timestamp.R')
 source('./scripts/data-with-labels.R')
@@ -31,6 +33,18 @@ col_name_1 = "blt_beg"
 col_name_2="liver_fat"
 sample_df <- factor_timestamp(sample_df, col_name)
 sample_df <- factor_hms (sample_df, col_name_1)
+
+summary(sample_df)
+gg_miss_var(wave_s0,show_pct= TRUE)
+
+
+wave_s0 <- select(sample_df, ends_with("_s0"))
+wave_s_s0 <- select(wave_s0, ends_with("_s_s0"))
+
+gg_miss_var(wave_s0, show_pct = FALSE)
+
+help(gg_miss_var)
+vis_miss(sample_df)
 
 #Extracting evolution features
 evo_features <- Evoxploit$new(sample_df, sample_df_label_column[[1]], wave_suffix = "_s")
@@ -67,4 +81,7 @@ sample_df_for_evo_withcL_factored <- factor_liver_fat (sample_df_for_evo_withcL,
 
                
 
-
+#exportingexcel
+install.packages("xlsx")
+library("xlsx")
+write.xlsx(dat,"C:/Users/Mohit/Desktop/DE_WiSe2019/Project DM and VA/rawdata.xlsx")
