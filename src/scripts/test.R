@@ -1,5 +1,5 @@
 #install missing packages and import
-package_list <- c("evoxploit", "tidyverse", "checkmate", "rlist","hash", "hms", "ggplot2", "visdat","naniar","xlsx")
+package_list <- c("evoxploit", "tidyverse", "checkmate", "rlist","hash", "hms", "ggplot2", "visdat","naniar","xlsx", "pre", "caret")
 package_list <- package_list[!(package_list %in% installed.packages()[,"Package"])]
 if(length(package_list)) install.packages(package_list)
 
@@ -12,6 +12,8 @@ library(hms)
 library(ggplot2)
 library(visdat)
 library(naniar)
+library(pre)
+library(caret)
 library("xlsx")
 source('./scripts/extract-features.R')
 source('./scripts/factor-timestamp.R')

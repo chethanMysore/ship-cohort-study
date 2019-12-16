@@ -32,7 +32,7 @@ select_features <- function(feat_name, suffix =  "(_s0|_s1|_s2)"){
 drop_mutated_columns <- function(feat_name, suffix = "(_s0|_s1|_s2)"){
   print(feat_name)
   feat_count <- feature_list[[feat_name]]
-  if(feat_count != 3){
+  if(feat_count != 3 && feat_name != "female"){ # skip female_s0 feature since it is required for gender analysis
     print(grep(str_c("^", feat_name, suffix, "$"), "age_ship_s0"))
     #sample_ship_df <<- sample_ship_df[, -grep(str_c("^",feat_name,"(_s0|_s1|_s2)$"), col_names)]
     mutated_cols_to_remove[[feat_name]] <<- 1
