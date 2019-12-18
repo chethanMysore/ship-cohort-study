@@ -46,8 +46,7 @@ ship_study_results$summary()
 validation_set <- ship_study_results$validation_set
 actual_labels <- validation_set$liver_fat
 validation_set <- validation_set[, !names(validation_set) %in% c("liver_fat")]
-model_predictions <- predict(ship_study_results$model, validation_set[1:50,])
-actual_labels <- actual_labels[1:50]
+model_predictions <- predict(ship_study_results$model, validation_set)
 cmp_table <- table(factor(model_predictions, levels = levels(model_predictions)),
                    factor(actual_labels, levels = levels(actual_labels)))
 confusionMatrix(cmp_table)

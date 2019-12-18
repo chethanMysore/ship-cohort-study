@@ -78,7 +78,8 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
       private$..validation_set <- evo_imputed_sample[test,]
       sample_class_labels <- private$..train_set$liver_fat
       train_set <- private$..train_set[, !names(private$..train_set) %in% c("liver_fat")]
-      private$..rule_fit_model <- rule_fit(train_set[1:50,], sample_class_labels[1:50], private$..cv_folds)
+      
+      private$..rule_fit_model <- rule_fit(train_set, sample_class_labels, private$..cv_folds)
       
       ## Store Results
       if(!is.null(private$..rule_fit_model)){
