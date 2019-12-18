@@ -14,7 +14,7 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
   ..validation_set = NULL,
   ..cv_folds = NULL,
   ..model_validation_result = NULL,
-  ..importance_plotname = "feature-importance",
+  ..importance_plotname = "feature-importance.png",
   ..vis_dir = "../visualization"
   ),
   public = list(
@@ -111,7 +111,7 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
           cat("\tpenalty.par.value: ", private$..best_tuning_params$penalty.par.value, "\n")
           cat("\tcv_folds: ", private$..best_tuning_params$cv_folds, "\n")
         }
-        file_path = str_c(private$..vis_dir, private$..importance_plotname)
+        file_path = str_c(private$..vis_dir, "/", private$..importance_plotname)
         png(filename = file_path)
         importance(private$..rule_fit_model$finalModel)
       }
