@@ -7,7 +7,7 @@ library(hash)
 feature_list <- list()
 cols_to_remove <- list()
 mutated_cols_to_remove <- list()
-
+suffix <- "(_s0|_s1|_s2)"
 
 # select features with suffix
 select_features <- function(feat_name, suffix =  "(_s0|_s1|_s2)"){
@@ -30,11 +30,8 @@ select_features <- function(feat_name, suffix =  "(_s0|_s1|_s2)"){
 
 # drop columns which does not match count = 3
 drop_mutated_columns <- function(feat_name, suffix = "(_s0|_s1|_s2)"){
-  print(feat_name)
   feat_count <- feature_list[[feat_name]]
   if(feat_count != 3 && feat_name != "female"){ # skip female_s0 feature since it is required for gender analysis
-    print(grep(str_c("^", feat_name, suffix, "$"), "age_ship_s0"))
-    #sample_ship_df <<- sample_ship_df[, -grep(str_c("^",feat_name,"(_s0|_s1|_s2)$"), col_names)]
     mutated_cols_to_remove[[feat_name]] <<- 1
   }
 }
@@ -50,7 +47,8 @@ remove_cols <- function(feat_name, unwanted_cols){
 
 
 # extract all features that are present in all waves/suffix
-extract_features_with_suffix <- function(data_df, suffix){
+extract_features_with_suffix <- function(data_df, wave_suffix){
+  suffix <<- wave_suffix
   feature_list <<- list()
   cols_to_remove <<- list()
   mutated_cols_to_remove <<- list()
