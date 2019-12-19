@@ -78,6 +78,7 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
         file_path = str_c(getwd(), private$..vis_dir, "/", private$..importance_plotname)
         png(filename = file_path)
         importance(private$..rule_fit_model$finalModel)
+        dev.off()
       }
       invisible(self)
     }
