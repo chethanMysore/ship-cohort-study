@@ -63,22 +63,16 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
         private$..data_df_with_evo <- private$..data_df_with_evo[,!names(private$..data_df_with_evo) %in% cols_to_remove]
       }
       
-      ## Build Rule Fit Model
-      ## Import final_evo_dataset_imputed csv into evo_dataset_imputed variable. ToDo: Code this 
-      evo_imputed_sample <- evo_dataset_imputed %>%
-        mutate(liver_fat = factor(liver_fat, levels = c(1, 0), labels = c(1, 0)))
-      private$..data_df_with_evo <- evo_imputed_sample
-      private$..data_df_with_evo <- private$..data_df_with_evo[, !names(private$..data_df_with_evo) %in% c("female_s0")]
-      
       ## Sample data into train and validation sets
       set.seed(42)
-      train <- sample(1:nrow(evo_imputed_sample), 2 * nrow(evo_imputed_sample)/3)
+      train <- sample(1:nrow(private$..data_df_with_evo), 2 * nrow(private$..data_df_with_evo)/3)
       test <- (-train)
-      private$..train_set <- evo_imputed_sample[train,]
-      private$..validation_set <- evo_imputed_sample[test,]
+      private$..train_set <- private$..data_df_with_evo[train,]
+      private$..validation_set <- private$..data_df_with_evo[test,]
       sample_class_labels <- private$..train_set$liver_fat
       train_set <- private$..train_set[, !names(private$..train_set) %in% c("liver_fat")]
       
+      ## Build Rule Fit Model
       private$..rule_fit_model <- rule_fit(train_set, sample_class_labels, private$..cv_folds)
       
       ## Store Results
