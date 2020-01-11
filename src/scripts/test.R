@@ -18,6 +18,7 @@ library(R6)
 library(xlsx)
 library(DescTools)
 library(shinydashboard)
+library(groupdata2)
 source('./scripts/extract-features.R')
 source('./scripts/factor-timestamp.R')
 source('./scripts/data-with-labels.R')
@@ -25,7 +26,7 @@ source('./scripts/grouping-dataframes.R')
 source('./scripts/rule-fit-implementation.R')
 source('./scripts/ShipCohortStudy.R')
 source('./scripts/data_imputation.R')
-
+source('./scripts/data-sampling.R')
 ## Take sample of ship_data dataset
 sample_df <- ship_dataset
 
@@ -59,15 +60,18 @@ cols_to_remove <- gender_group_compare (group_by_male, group_by_female)
 cols_to_remove <- list.append(cols_to_remove, "female_s0")
 sample_df <- sample_df[,!names(sample_df) %in% cols_to_remove]
 
+##Remove columns having 5% or more than 5% of missing values(NA)
+sample_df <- sample_df[, -which(colMeans(is.na(sample_df)) > 0.05)]
+
 ## Impute Data
 sample_df <- impute_dataset(sample_df)
 
-## Scaling evolution_features for all waves
+## Scaling features for all waves
 sample_df <- sample_df%>%
   mutate_at(vars(names(sample_df)[which(sapply(sample_df, is.numeric))])
             ,(function(x) return((x - min(x)) / (max(x) - min(x)))))
 
-sample_df$liver_fat <- sample_labels
+sample_df$liver_fat <- sample_labels[[1]]
 
 ## Plot Missing Values for wave s0
 wave_s0_df <- select(sample_df, ends_with("_s0"))
@@ -76,13 +80,12 @@ gg_miss_var(wave_s0_df, show_pct = FALSE)  #shows number of missing values in th
 vis_miss(sample_df)  #visualize missing values
 
 ## Build Rule Fit Model
-ship_study_results <- ShipCohortStudy$new(data_df = sample_df, labels = sample_df$liver_fat[[1]])
-
+ship_study_results <- ShipCohortStudy$new(data_df = sample_df, labels = sample_df$liver_fat, cv_folds = 5)
 ship_study_results$summary()
 
 ## Validate Model Prediction
 validation_set <- ship_study_results$validation_set
-actual_labels <- validation_set$liver_fat[[1]]
+actual_labels <- validation_set$liver_fat
 validation_set <- validation_set[, !names(validation_set) %in% c("liver_fat")]
 model_predictions <- predict(ship_study_results$model, validation_set)
 cmp_table <- table(factor(model_predictions, levels = levels(model_predictions)),

@@ -12,12 +12,13 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
   ..train_set = NULL,
   ..validation_set = NULL,
   ..cv_folds = NULL,
+  ..train_index = NULL,
   ..model_validation_result = NULL,
   ..importance_plotname = "feature-importance.png",
   ..vis_dir = "/visualization"
   ),
   public = list(
-    initialize = function(data_df, labels, cv_folds = 5){
+    initialize = function(data_df, labels, train_index = NULL, cv_folds = 5){
       #checkmate::assert(data_df)
       #checkmate::assert(labels)
       checkmate::assert_data_frame(data_df)
@@ -27,23 +28,29 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
       private$..labels <- labels
       private$..cv_folds <- cv_folds
       private$..data_df_with_evo <- data_df
+      private$..train_index <- train_index
       
       if(all(purrr::map_lgl(labels, ~ checkmate::test_numeric(.x)))){  # if the labels provided is a numeric array then convert it to factor
         labels <- only_labels(labels = labels)
         labels <- labels$liver_fat
       }
 
-      ## Sample data into train and validation sets
+      ## sampling of data using stratified k-fold cross validation
+      train_index <- stratified_sample(data_df = private$..data_df_with_evo, kfolds = private$..cv_folds, cat_colname = "liver_fat")
+      
+      ## validation set
       set.seed(42)
-      train <- sample(1:nrow(private$..data_df_with_evo), 2 * nrow(private$..data_df_with_evo)/3)
-      test <- (-train)
-      private$..train_set <- private$..data_df_with_evo[train,]
-      private$..validation_set <- private$..data_df_with_evo[test,]
-      sample_class_labels <- private$..train_set$liver_fat[[1]]
-      train_set <- private$..train_set[, !names(private$..train_set) %in% c("liver_fat")]
+      validation_index <- sample(train_index, 1)
+      private$..validation_set <- private$..data_df_with_evo[validation_index[[1]],]
+      
+      ## Training set
+      private$..train_set <-  private$..data_df_with_evo[-validation_index[[1]],]
+      train_index <- train_index[-match(validation_index, train_index)]
+      train_labels <- private$..data_df_with_evo$liver_fat
+      private$..data_df_with_evo <- private$..data_df_with_evo[, !names(private$..data_df_with_evo) %in% c("liver_fat")]
       
       ## Build Rule Fit Model
-      private$..rule_fit_model <- rule_fit(train_set, sample_class_labels, private$..cv_folds)
+      private$..rule_fit_model <- rule_fit(data_df = private$..data_df_with_evo, class_labels = train_labels, cv_folds = (private$..cv_folds - 1), train_index = train_index)
       
       ## Store Results
       if(!is.null(private$..rule_fit_model)){
