@@ -1,5 +1,5 @@
 ## Install missing packages and import
-dependencies_list <- c("evoxploit", "tidyverse", "checkmate", "rlist","hash", "hms", "ggplot2", "visdat","naniar","xlsx", "pre", "caret", "R6","shinydashboard", "DescTools")
+dependencies_list <- c("evoxploit", "tidyverse", "checkmate", "rlist","hash", "hms", "ggplot2", "visdat","naniar","xlsx", "pre", "caret", "R6","shinydashboard", "DescTools", "groupdata2")
 missing_packages_list <- dependencies_list[!(dependencies_list %in% installed.packages()[,"Package"])]
 if(length(missing_packages_list)) install.packages(missing_packages_list)
 
