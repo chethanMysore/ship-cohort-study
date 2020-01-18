@@ -92,6 +92,21 @@ cmp_table <- table(factor(model_predictions, levels = levels(model_predictions))
                    factor(actual_labels, levels = levels(actual_labels)))
 confusionMatrix(cmp_table)
 
+## lower and upper bounds of feature values
+print(ship_study_results$model$finalModel$wins_points)
+
+## best tuning parameters
+print(ship_study_results$model$finalModel$tuneValue)
+
+## Variable importance
+# Coefficients for final linear regression model
+imp <- importance(ship_study_results$model$finalModel)
+print(imp$varimps)
+
+print(imp$baseimps)
+
+
+
 ## Exporting to Excel
 #output_file_path <- getwd()
 #output_file_name <- "sample_df_report.xlsx"
