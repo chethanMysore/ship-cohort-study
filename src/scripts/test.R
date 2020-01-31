@@ -31,6 +31,8 @@ source('./scripts/rule-fit-implementation.R')
 source('./scripts/ShipCohortStudy.R')
 source('./scripts/data_imputation.R')
 source('./scripts/data-sampling.R')
+
+
 ## Take sample of ship_data dataset
 sample_df <- ship_dataset
 
@@ -46,6 +48,26 @@ sample_df <- data_with_labels(sample_df)
 sample_labels <- only_labels(data_df = sample_df)
 sample_df$liver_fat <- sample_labels
 
+
+##Plot missingness graphs
+zero_t0_6_missing <- sample_df[, which(colMeans(is.na(sample_df)) >= 0 & colMeans(is.na(sample_df)) < 0.06)]
+six_to_10_missing <- sample_df[, which(colMeans(is.na(sample_df)) >= 0.06 & colMeans(is.na(sample_df)) < 0.10)]
+ten_to_20_missing <- sample_df[, which(colMeans(is.na(sample_df)) >= 0.10 & colMeans(is.na(sample_df)) < 0.20)]
+greater_than_20_missing <- sample_df[, which(colMeans(is.na(sample_df1)) >= 0.20)]
+
+wave_s0_df <- zero_t0_6_missing
+gg_miss_var(wave_s0_df, show_pct = TRUE)  #shows percentage of missing values in the column
+
+wave_s0_df <- six_to_10_missing
+gg_miss_var(wave_s0_df, show_pct = TRUE)  #shows percentage of missing values in the column
+
+wave_s0_df <- ten_to_20_missing
+gg_miss_var(wave_s0_df, show_pct = TRUE)  #shows percentage of missing values in the column
+
+wave_s0_df <- greater_than_20_missing
+gg_miss_var(wave_s0_df, show_pct = TRUE)  #shows percentage of missing values in the column
+
+
 ## Extract features present in all 3 waves
 sample_df <- extract_features_with_suffix(sample_df, "(_s0|_s1|_s2)")
 
@@ -57,9 +79,6 @@ sample_df <- factor_hms(sample_df, "blt_beg")
 
 ##Remove columns having 5% or more than 5% of missing values(NA)
 sample_df <- sample_df[, -which(colMeans(is.na(sample_df)) > 0.06)]
-
-## Impute Data
-sample_df <- impute_dataset(sample_df)
 
 ## Extracting evolution features
 evo_extraction_result <- Evoxploit$new(sample_df, sample_labels[[1]], wave_suffix = "_s")
@@ -76,6 +95,12 @@ cols_to_remove <- gender_group_compare (group_by_male, group_by_female)
 cols_to_remove <- list.append(cols_to_remove, "female_s0")
 sample_df <- sample_df[,!names(sample_df) %in% cols_to_remove]
 
+##Remove columns having 5% or more than 5% of missing values(NA)
+sample_df <- sample_df[, -which(colMeans(is.na(sample_df)) > 0.06)]
+
+## Impute Data
+sample_df <- impute_dataset(sample_df)
+
 
 ## Scaling features for all waves
 sample_df <- sample_df%>%
@@ -83,9 +108,6 @@ sample_df <- sample_df%>%
             ,(function(x) return((x - min(x)) / (max(x) - min(x)))))
 
 sample_df$liver_fat <- sample_labels[[1]]
-
-##Remove columns having 5% or more than 5% of missing values(NA)
-sample_df <- sample_df[, -which(colMeans(is.na(sample_df)) > 0.06)]
 
 
 ## Build Rule Fit Model
@@ -108,21 +130,15 @@ print(ship_study_results$model$finalModel$wins_points)
 print(ship_study_results$model$finalModel$tuneValue)
 
 check <- print(ship_study_results$model$finalModel)
-
 check$description
+
 
 ## Variable importance
 # Coefficients for final linear regression model
 imp <- importance(ship_study_results$model$finalModel)
 
-print(imp$varimps$imp)
-
-
-print(imp$varimps$varname[1])
-
 rules_coeff <- select(imp$baseimps, c("rule", "description", "coefficient"))
-
-rules_coeff
+str(rules_coeff)
 
 
 #coefficients of Rules and its plot
@@ -146,19 +162,19 @@ effect <- FeatureEffect$new(predictor = model, feature = imp$varimps$varname[2],
 plot(effect)
 
 
-##ICE BOX Plot
-
-model$data$feature.names
-
-ice_box <- Partial$new(model, "som_tail_s2") %>% plot() + ggtitle("ICE")
-plot(ice_box)
-
-ice_box_center<-Partial$new(model,"diabetes_s0",ice=TRUE,grid.size = 50)
-
-any(is.na(ice_box_center$center(as.numeric(mode(as.vector((ship_study_results$model$finalModel$data$diabetes_s0)))))))
-
-plot_center_ice<-plot(ice_box_center) + ggtitle("ICE_CENTER_cener_rep_s2")
-ship_study_results$model$finalModel$data$age_ship_s0
+# ##ICE BOX Plot
+# 
+# model$data$feature.names
+# 
+# ice_box <- Partial$new(model, "som_tail_s2") %>% plot() + ggtitle("ICE")
+# plot(ice_box)
+# 
+# ice_box_center<-Partial$new(model,"diabetes_s0",ice=TRUE,grid.size = 50)
+# 
+# any(is.na(ice_box_center$center(as.numeric(mode(as.vector((ship_study_results$model$finalModel$data$diabetes_s0)))))))
+# 
+# plot_center_ice<-plot(ice_box_center) + ggtitle("ICE_CENTER_cener_rep_s2")
+# ship_study_results$model$finalModel$data$age_ship_s0
 
 
 ## Plot Missing Values for wave s0
@@ -174,8 +190,3 @@ vis_miss(sample_df)  #visualize missing values
 #output_file_name <- "sample_df_report.xlsx"
 #dataframe_to_write <- sample_df
 #write.xlsx(dataframe_to_write, str_c(output_file_path, "/visualization/", output_file_name))
-
-
-sum(is.na(ship_dataset$age_ship_s2))
-
-any(is.na(ship_dataset))
