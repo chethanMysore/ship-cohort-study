@@ -135,9 +135,11 @@ check$description
 
 ## Variable importance
 # Coefficients for final linear regression model
-imp <- importance(ship_study_results$model$finalModel)
+feature_imp <- importance(ship_study_results$model$finalModel)
 
-rules_coeff <- select(imp$baseimps, c("rule", "description", "coefficient"))
+
+## Dataframe for model results
+rules_coeff <- select(feature_imp$baseimps, c("rule", "description", "coefficient"))
 str(rules_coeff)
 
 

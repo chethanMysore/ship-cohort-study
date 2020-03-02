@@ -37,7 +37,19 @@ var_values <- feature_imp$varimps$imp
 rules_coeff_1 <- select(feature_imp$baseimps, c("rule", "description", "coefficient"))
 rules_coeff_1
 
-
+## Validate Model Prediction
+validation_set <- ship_study_results$validation_set
+actual_labels <- validation_set$liver_fat
+validation_set <- validation_set[, !names(validation_set) %in% c("liver_fat")]
+model_predictions <- predict(ship_study_results$model, validation_set)
+cmp_table <- table(factor(model_predictions, levels = levels(model_predictions)),
+                   factor(actual_labels, levels = levels(actual_labels)))
+cmatrix <- confusionMatrix(cmp_table)
+cmatrix_table <- as.data.frame(cmatrix$table)
+generalization_overall <- as.data.frame(cmatrix$overall)
+generalization_byClass <- as.data.frame(cmatrix$byClass)
+colnames(generalization_byClass) <- c("Performance Value")
+colnames(generalization_overall) <- c("Performance Value")
 
 ##########################################------------  UI.R ---------- ##################################################
 
@@ -67,7 +79,26 @@ body <- dashboardBody(
               tabBox(
                 width = "100%", height = "100vh", id = "tabset1",
                 tabPanel("Feature Importance Plot", plotOutput(outputId = "fea_imp", width = "100%", height = "100vh")),
-                tabPanel("Model", DT::dataTableOutput(outputId = "model1"))
+                tabPanel("Model", DT::dataTableOutput(outputId = "model1")),
+                tabPanel("Performance Analysis", fluidRow(
+                  column(6,
+                         box(title = "Generalization accuracy of the model over test set", width = "100%", background = "green", style="color: black;",
+                             DT::dataTableOutput(outputId = "performance_overall"))
+                  ), 
+                  column(6, 
+                         box(title = "Generalization performance over test set with different metrics", width = "100%", background = "blue", style="color: black;",
+                             DT::dataTableOutput(outputId = "performance_byClass"))
+                         )
+                  ), 
+                  fluidRow(
+                    # column(6, 
+                    #        div( style="color: black;",
+                    #       box(title = "Confusion Matrix", width = "100%", background = "light-blue", style="color: black;" ,
+                    #           DT::dataTableOutput(outputId = "conf_matrix"))
+                    #        )
+                    #        ), 
+                    )
+                  )
               )
             )
     ),
@@ -123,7 +154,7 @@ body <- dashboardBody(
             fluidRow(
               titlePanel("Centered ICE Plot"),
               sidebarLayout(
-                sidebarPanel(selectInput(inputId = 'features',
+                sidebarPanel(selectInput(inputId = 'centered_features',
                                          label='List of Features',
                                          choices = var_list)),
                 mainPanel(
@@ -153,7 +184,7 @@ server <- shinyServer(function(input, output,session) {
   })
   
   output$centered_ice_plot <- renderPlot({
-    effect <- FeatureEffect$new(predictor = model, feature = input$features, center.at = 0,  method = "ice")
+    effect <- FeatureEffect$new(predictor = model, feature = input$centered_features, center.at = 0,  method = "ice")
     plot(effect)
   })
 
@@ -252,6 +283,32 @@ server <- shinyServer(function(input, output,session) {
                                      pageLength = 50,
                                      initComplete = I("function(settings, json) {alert('DONE')}")
                                    )) 
+
+  output$conf_matrix <- DT::renderDataTable(cmatrix_table,
+                                       options = list(
+                                         paging=FALSE,
+                                         searching = FALSE,
+                                         processing=FALSE,
+                                         initComplete = I("function(settings, json) {alert('DONE')}")
+                                       )) 
+
+  output$performance_overall <- DT::renderDataTable(generalization_overall,
+                                       options = list(
+                                         caption = "Overall Model Performance on test set with generalization accuracy",
+                                         searching = FALSE,
+                                         processing=FALSE,
+                                         paging=FALSE,
+                                         initComplete = I("function(settings, json) {alert('DONE')}")
+                                       )) 
+
+  output$performance_byClass <- DT::renderDataTable(generalization_byClass,
+                                       options = list(
+                                         color="black",
+                                         searching = FALSE,
+                                         processing=FALSE,
+                                         paging=FALSE,
+                                         initComplete = I("function(settings, json) {alert('DONE')}")
+                                       )) 
   
 }
 
