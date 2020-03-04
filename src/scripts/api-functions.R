@@ -39,8 +39,17 @@ getFeatureImportance <- function() {
   feature_imp <- importance(ship_study_results$model$finalModel)
   x <- feature_imp$varimps$imp
   y <- feature_imp$varimps$varname
-  #y_description <- list("Somatometric measurements of waist", "Time of lights off during sleep", "Glucose", "Evolution feature", "Triglycerides during S2 wave", "Triglycerides during S2 wave", "Somatometric measurements of Body Mass Index", "Triglycerides during S1 wave", "Diabetes", "Serum Uric Acid", "Evolution feature")
+  y_description <- list("Somatometric measurements of waist", 
+                        "Patient's similarity with positive cohort patients",
+                        "Somatometric measurements of Body Mass Index", 
+                        "Serum Uric Acid",
+                        "Time of lights off during sleep", 
+                        "Triglycerides during S2 wave",
+                        "Triglycerides during S1 wave",
+                        "Characteristic changes in the patient",
+                        "Glucose", 
+                        "Triglycerides during S0 wave",
+                        "Diabetes")
   importance_data <- list(x,y,y_description)
   list('response' = importance_data)
 }
-
