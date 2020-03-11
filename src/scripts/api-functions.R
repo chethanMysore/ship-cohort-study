@@ -1,4 +1,3 @@
-#* @filter cors
 cors <- function(req, res) {
   
   res$setHeader("Access-Control-Allow-Origin", "*")
@@ -11,45 +10,39 @@ cors <- function(req, res) {
   } else {
     plumber::forward()
   }
-  
 }
 
-test.data <- list(
-  "cat",
-  "dog",
-  1,
-  2,
-  "butterfly"
-)
-# 
-# #* @get /getFeatureImportance
-# #* @serializer unboxedJSON
-# getFeatureImportance <- function() {
-#   imp <- print(ship_study_results$model$finalModel)
-#   x <- imp$description
-#   y <- imp$coefficient
-#   importance_data <- list(x,y)
-#   list('response' = importance_data)
-# }
-
-
-#* @get /getFeatureImportance
 #* @serializer unboxedJSON
-getFeatureImportance <- function() {
+getFeatureImportance <- function(req,res) {
   feature_imp <- importance(ship_study_results$model$finalModel)
   x <- feature_imp$varimps$imp
   y <- feature_imp$varimps$varname
   y_description <- list("Somatometric measurements of waist", 
-                        "Patient's similarity with positive cohort patients",
-                        "Somatometric measurements of Body Mass Index", 
-                        "Serum Uric Acid",
-                        "Time of lights off during sleep", 
+                        "Glucose",
                         "Triglycerides during S2 wave",
-                        "Triglycerides during S1 wave",
+                        "Patient's similarity with negative cohort patients",
+                        "Patient's similarity with positive cohort patients",
+                        "Time of lights off during sleep", 
+                        "Serum Uric Acid",
                         "Characteristic changes in the patient",
-                        "Glucose", 
-                        "Triglycerides during S0 wave",
-                        "Diabetes")
+                        "Representativeness of the patient in the cohort group",
+                        "Somatometric measurements of Body Mass Index", 
+                        "Diabetes Level",
+                        "Triglycerides during S0 wave"
+                        )
   importance_data <- list(x,y,y_description)
   list('response' = importance_data)
 }
+
+#* @serializer unboxedJSON
+getIceCoords <- function(req, res){
+tryCatch({
+  feature_name <- fromJSON(req$postBody)[[1]]
+  ice_coords <- plot_ice(ship_study_results$model$finalModel, ship_study_results$model$finalModel$data, feature_name)
+  ice_coords <- data.frame("x"=ice_coords[[1]], "y"=ice_coords$.y.hat)
+  list(status="SUCCESS", code="200", response=ice_coords)
+}, error = function(e){
+  list(status="ERROR", code="500", response=e)
+})
+}
+

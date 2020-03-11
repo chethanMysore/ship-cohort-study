@@ -1,5 +1,5 @@
 ## Install missing packages and import
-dependencies_list <- c("evoxploit", "tidyverse", "checkmate", "rlist","hash", "hms", "ggplot2", "visdat","naniar","xlsx", "pre", "caret", "R6","shinydashboard", "DescTools", "groupdata2")
+dependencies_list <- c("evoxploit", "tidyverse", "checkmate", "rlist","hash", "hms", "ggplot2", "visdat","naniar","xlsx", "pre", "caret", "R6","shinydashboard", "DescTools", "groupdata2","devtools")
 missing_packages_list <- dependencies_list[!(dependencies_list %in% installed.packages()[,"Package"])]
 if(length(missing_packages_list)) install.packages(missing_packages_list)
 
@@ -21,7 +21,11 @@ library(shinydashboard)
 library(groupdata2)
 library(iml)
 library(ICEbox)
-
+library(devtools)
+install_github("trestletech/plumber")
+library(plumber)
+library(jsonlite)
+library(yaml)
 
 source('./scripts/extract-features.R')
 source('./scripts/factor-timestamp.R')
@@ -31,6 +35,8 @@ source('./scripts/rule-fit-implementation.R')
 source('./scripts/ShipCohortStudy.R')
 source('./scripts/data_imputation.R')
 source('./scripts/data-sampling.R')
+source('./scripts/ice-implementation.R')
+source('./scripts/api-functions.R')
 
 
 ## Take sample of ship_data dataset
@@ -130,7 +136,7 @@ print(ship_study_results$model$finalModel$wins_points)
 print(ship_study_results$model$finalModel$tuneValue)
 
 check <- print(ship_study_results$model$finalModel)
-check$description
+# check$description
 
 
 ## Variable importance
@@ -146,7 +152,6 @@ str(rules_coeff)
 #coefficients of Rules and its plot
 explain(ship_study_results$model$finalModel, newdata = ship_study_results$validation_set, plot = TRUE, intercept = TRUE)
 
-
 ## TO create an object of the type Predictor using the function "
 model = Predictor$new(model = ship_study_results$model$finalModel, ship_study_results$model$finalModel$data)
 
@@ -157,12 +162,10 @@ ggplot(data = check, aes(x = check$description, y = check$coefficient, fill = ch
   labs(x= "Features", y="Importance") + 
   coord_flip()
 
-
-
 ##ICE plot
 effect <- FeatureEffect$new(predictor = model, feature = imp$varimps$varname[2], method = "ice")
-plot(effect)
-
+ice_plot <- plot(effect)
+ice_data <- ice_plot$data
 
 # ##ICE BOX Plot
 # 
