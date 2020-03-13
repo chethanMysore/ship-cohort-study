@@ -23,7 +23,9 @@ library(groupdata2)
 library(iml)
 library(ICEbox)
 library(devtools)
-install_github("trestletech/plumber")
+if(!c("plumber") %in% installed.packages()[,"Package"]){
+  install_github("trestletech/plumber")
+}
 library(plumber)
 library(jsonlite)
 library(yaml)
@@ -38,7 +40,8 @@ source('./scripts/data_imputation.R')
 source('./scripts/data-sampling.R')
 source('./scripts/ice-implementation.R')
 source('./scripts/api-functions.R')
-  
+source('./scripts/extract-model-performance.R')
+
   #' Launch App in Dev Mode
   #'
   #' @export
@@ -63,6 +66,10 @@ source('./scripts/api-functions.R')
       getFeatureImportance(req,res)
       })
     
+    pr$handle("GET", "/getModelPerformance", function(req,res){
+      getModelPerformance(req,res)
+    })
+    
     pr$handle("POST", "/getIceCoords", function(req, res) {
       getIceCoords(req,res)
       })
@@ -74,3 +81,4 @@ source('./scripts/api-functions.R')
   }
   
   launchAppDev(3000)
+    

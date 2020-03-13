@@ -36,6 +36,34 @@ paths:
           description: Feature Importance was not found
         default:
           description: Unexpected Error
+  /getModelPerformance:
+    get: 
+      summary: returns model performance
+      description: performance comparisons on test and train sets and returns the various metrics of performance of the model
+      responses:
+        '200': 
+          description: A Json with model performance over train and test sets
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - type: array
+                      items:
+                        type: number
+                        format: float
+                    - type: array
+                      items:
+                        type: number
+                        format: float
+                    - type: array
+                      items:
+                        type: string
+        '404':
+          description: Model was not found
+        default:
+          description: Unexpected Error
   /getIceCoords:
     post:
       summary: returns co-ordinates for plotting ICE for a specific feature requested
