@@ -55,23 +55,23 @@ getModelPerformance <- function(req, res){
     byclass_train <- as.list(train_results$byClass)
     overall_test <- as.list(test_results$overall)
     byclass_test <- as.list(test_results$byClass)
-    performance_results <- list(train_performance=data.frame("accuracy"=overall_train$Accuracy, 
+    performance_results <- list(trainPerformance=data.frame("accuracy"=overall_train$Accuracy, 
                                                     "kappa"=overall_train$Kappa,
-                                                    "PositivePredictionValue"=byclass_train$`Pos Pred Value`,
-                                                    "NegativePredictionValue"=byclass_train$`Neg Pred Value`,
-                                                    "Sensitivity"=byclass_train$Sensitivity,
+                                                    "positivePredictionValue"=byclass_train$`Pos Pred Value`,
+                                                    "negativePredictionValue"=byclass_train$`Neg Pred Value`,
+                                                    "sensitivity"=byclass_train$Sensitivity,
                                                     "specificity"=byclass_train$Specificity,
-                                                    "Precision"=byclass_train$Precision,
-                                                    "F1"=byclass_train$F1
+                                                    "precision"=byclass_train$Precision,
+                                                    "f1"=byclass_train$F1
                                                     ),
-                             test_performance=data.frame("accuracy"=overall_test$Accuracy, 
+                             testPerformance=data.frame("accuracy"=overall_test$Accuracy, 
                                                    "kappa"=overall_test$Kappa,
-                                                   "PositivePredictionValue"=byclass_test$`Pos Pred Value`,
-                                                   "NegativePredictionValue"=byclass_test$`Neg Pred Value`,
-                                                   "Sensitivity"=byclass_test$Sensitivity,
+                                                   "positivePredictionValue"=byclass_test$`Pos Pred Value`,
+                                                   "negativePredictionValue"=byclass_test$`Neg Pred Value`,
+                                                   "sensitivity"=byclass_test$Sensitivity,
                                                    "specificity"=byclass_test$Specificity,
-                                                   "Precision"=byclass_test$Precision,
-                                                   "F1"=byclass_test$F1
+                                                   "precision"=byclass_test$Precision,
+                                                   "f1"=byclass_test$F1
                              ))
     list(status="SUCCESS", code="200", response=performance_results)
   }, error = function(e){
