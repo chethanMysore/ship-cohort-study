@@ -38,8 +38,7 @@ getFeatureImportance <- function(req,res) {
 getIceCoords <- function(req, res){
 tryCatch({
   feature_name <- fromJSON(req$postBody)[[1]]
-  ice_coords <- plot_ice(ship_study_results$model$finalModel, ship_study_results$model$finalModel$data, feature_name)
-  ice_coords <- data.frame("x"=ice_coords[[1]], "y"=ice_coords$.y.hat)
+  ice_coords <- get_ice_points(ship_study_results$model$finalModel$data, ship_study_results$model, feature_name = feature_name, frac_to_build = 0.27)
   list(status="SUCCESS", code="200", response=ice_coords)
 }, error = function(e){
   list(status="ERROR", code="500", response=e)

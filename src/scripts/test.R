@@ -22,7 +22,9 @@ library(groupdata2)
 library(iml)
 library(ICEbox)
 library(devtools)
-install_github("trestletech/plumber")
+if(!c("plumber") %in% installed.packages()[,"Package"]){
+  install_github("trestletech/plumber")
+}
 library(plumber)
 library(jsonlite)
 library(yaml)
@@ -129,67 +131,15 @@ cmp_table <- table(factor(model_predictions, levels = levels(model_predictions))
                    factor(actual_labels, levels = levels(actual_labels)))
 confusionMatrix(cmp_table)
 
-## lower and upper bounds of feature values
-print(ship_study_results$model$finalModel$wins_points)
-
-## best tuning parametersc
-print(ship_study_results$model$finalModel$tuneValue)
-
-check <- print(ship_study_results$model$finalModel)
-# check$description
-
-
-## Variable importance
-# Coefficients for final linear regression model
-feature_imp <- importance(ship_study_results$model$finalModel)
-
-
-## Dataframe for model results
-rules_coeff <- select(feature_imp$baseimps, c("rule", "description", "coefficient"))
-str(rules_coeff)
-
-
-#coefficients of Rules and its plot
-explain(ship_study_results$model$finalModel, newdata = ship_study_results$validation_set, plot = TRUE, intercept = TRUE)
-
-## TO create an object of the type Predictor using the function "
-model = Predictor$new(model = ship_study_results$model$finalModel, ship_study_results$model$finalModel$data)
-
-##feature imp plot
-ggplot(data = check, aes(x = check$description, y = check$coefficient, fill = check$coefficient > 0)) + 
-  geom_bar(stat = "identity") +
-  scale_fill_manual(name = "Coefficients > 0", labels = c("Negative Values", "Positive Values"), values = c("FALSE"="#d43943", "TRUE"="#29ab9c")) + 
-  labs(x= "Features", y="Importance") + 
-  coord_flip()
-
-##ICE plot
-effect <- FeatureEffect$new(predictor = model, feature = imp$varimps$varname[2], method = "ice")
-ice_plot <- plot(effect)
-ice_data <- ice_plot$data
-
-# ##ICE BOX Plot
-# 
-# model$data$feature.names
-# 
-# ice_box <- Partial$new(model, "som_tail_s2") %>% plot() + ggtitle("ICE")
-# plot(ice_box)
-# 
-# ice_box_center<-Partial$new(model,"diabetes_s0",ice=TRUE,grid.size = 50)
-# 
-# any(is.na(ice_box_center$center(as.numeric(mode(as.vector((ship_study_results$model$finalModel$data$diabetes_s0)))))))
-# 
-# plot_center_ice<-plot(ice_box_center) + ggtitle("ICE_CENTER_cener_rep_s2")
-# ship_study_results$model$finalModel$data$age_ship_s0
-
-
 ## Plot Missing Values for wave s0
 #wave_s0_df <- select(sample_df, ends_with("_s2"))
 gg_miss_var(wave_s0_df, show_pct = TRUE)  #shows percentage of missing values in the column
 gg_miss_var(wave_s0_df, show_pct = FALSE)  #shows number of missing values in the column
 vis_miss(sample_df)  #visualize missing values
 
-
-
+pdp_points <- as.data.frame(ship_ice_plot$pdp)
+str(as.numeric(rownames(pdp_points)))
+str(pdp_points$`ship_ice_plot$pdp`)
 ## Exporting to Excel
 #output_file_path <- getwd()
 #output_file_name <- "sample_df_report.xlsx"
