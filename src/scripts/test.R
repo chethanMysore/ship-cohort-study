@@ -131,6 +131,21 @@ cmp_table <- table(factor(model_predictions, levels = levels(model_predictions))
                    factor(actual_labels, levels = levels(actual_labels)))
 confusionMatrix(cmp_table)
 
+## Variable importance
+# Coefficients for final linear regression model
+feature_imp <- importance(ship_study_results$model$finalModel)
+
+## Dataframe for model results
+rules_coeff <- select(feature_imp$baseimps, c("rule", "description", "coefficient"))
+check <- print(ship_study_results$model$finalModel)
+
+##feature imp plot
+ggplot(data = check, aes(x = check$description, y = check$coefficient, fill = check$coefficient > 0)) + 
+  geom_bar(stat = "identity") +
+  scale_fill_manual(name = "Coefficients > 0", labels = c("Negative Values", "Positive Values"), values = c("FALSE"="#d43943", "TRUE"="#29ab9c")) + 
+  labs(x= "Features", y="Importance") + 
+  coord_flip()
+
 ## Plot Missing Values for wave s0
 #wave_s0_df <- select(sample_df, ends_with("_s2"))
 gg_miss_var(wave_s0_df, show_pct = TRUE)  #shows percentage of missing values in the column
