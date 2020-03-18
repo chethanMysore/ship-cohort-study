@@ -84,7 +84,7 @@ getMinimalChange <- function(req, res){
   tryCatch({
     feature_imp <- importance(ship_study_results$model$finalModel)
     feat_imp <- feature_imp$varimps
-    robustness <- get_minimal_change(ship_study_results$model, ship_study_results$train_set, feat_imp$varname[1])
+    robustness <- get_minimal_change(ship_study_results$model, ship_study_results$validation_set, feat_imp$varname[1])
     list(status="SUCCESS", code="200", response=robustness)
   }, error = function(e){
     list(status="ERROR", code="500", response=e)

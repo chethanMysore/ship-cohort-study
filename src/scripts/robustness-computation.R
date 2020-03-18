@@ -2,7 +2,7 @@
 participant_variants <- list()
 minimal_change <- list()
 participant_minimal_change <- list()
-min_change <- c(0)
+min_change <- c()
 
 compute_robustness <- function(model, data_variants, participant_data, feature_name){
   actual_label = participant_data[1, "liver_fat"]
@@ -24,7 +24,7 @@ compute_robustness <- function(model, data_variants, participant_data, feature_n
       min_change <<- append(min_change, (variant - actual_feature_value[[1]]))
     })
   }
-  min_change <<- min_change[which.min(min_change)]
+  min_change <<- min_change[which.min(abs(min_change))]
   return(min_change)
 }
 
