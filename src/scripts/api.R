@@ -41,6 +41,7 @@ source('./scripts/data-sampling.R')
 source('./scripts/ice-implementation.R')
 source('./scripts/api-functions.R')
 source('./scripts/extract-model-performance.R')
+source('./scripts/robustness-computation.R')
 
   #' Launch App in Dev Mode
   #'
@@ -74,6 +75,10 @@ source('./scripts/extract-model-performance.R')
       getIceCoords(req,res)
       })
     
+    pr$handle("GET", "/getMinimalChange", function(req, res) {
+      getMinimalChange(req,res)
+    })
+    
     pr$run(port=port, swagger=function(pr, spec, ...){
       spec <- yaml::read_yaml("./scripts/swagger.yaml")
       spec
@@ -81,4 +86,5 @@ source('./scripts/extract-model-performance.R')
   }
   
   launchAppDev(3000)
-    
+                
+  
