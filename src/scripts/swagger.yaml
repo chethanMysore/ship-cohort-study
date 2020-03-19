@@ -157,34 +157,43 @@ paths:
         default:
           description: Unexpected Error
   "/getMinimalChange":
-    get:
-      summary: returns feature minimal change in participant feature value so that the prediction changes
+    post:
+      summary: returns minimal change for the selected participant such that the prediction changes
       description: endpoint to fetch minimal change in participant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                participant_id:
+                  type: integer
+                  description: participant to be explored
+                  example: 1
+              required: participant_id
       responses:
         '200':
-          description: A JSON Object with 3 elements. First, x-coords to the importance
-            plot, Second, y-coords to the importance plot, Third, label descriptions
+          description: A JSON object with co-ordinates to ice curves of the requested
+            feature
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  importance:
+                  ice_points:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number
+                        format: float
+                  pdp_points:
                     type: array
                     items:
                       type: number
                       format: float
-                  features:
-                    type: array
-                    items:
-                      type: number
-                      format: string
-                  featureDescription:
-                    type: array
-                    items:
-                      type: number
-                      format: string
         '404':
-          description: Feature Importance was not found
+          description: Feature was not found
         default:
           description: Unexpected Error

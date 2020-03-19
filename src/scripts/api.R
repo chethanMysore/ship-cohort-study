@@ -75,7 +75,7 @@ source('./scripts/robustness-computation.R')
       getIceCoords(req,res)
       })
     
-    pr$handle("GET", "/getMinimalChange", function(req, res) {
+    pr$handle("POST", "/getMinimalChange", function(req, res) {
       getMinimalChange(req,res)
     })
     
