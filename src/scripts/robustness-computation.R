@@ -38,7 +38,7 @@ compute_minimal_change <- function(robust_rules, participant_data){
       else{
         change = feat$value - actual_value
       }
-      feat_change[[feat$feature]] <<- change
+      feat_change <<- list.append(feat_change, list("feature"=feat$feature, "value"=change))
     })
     minimal_change <<- list.append(minimal_change, list("rule" = rule$description, "minimalChange" = feat_change))
   })
@@ -140,6 +140,7 @@ compute_predicted_value <- function(rules){
 
 get_minimal_change <- function(rules_df, participant_index, train_set, minimal_feature_set){
   participant_data <- train_set[participant_index, colnames(train_set) %in% minimal_feature_set]
+  actual_label <- train_set[participant_index, "liver_fat"];
   rules = parse_rules(rules_df)
   isSatisfied <<- list()
   by(rules, 1:nrow(rules), function(rule){
@@ -149,6 +150,7 @@ get_minimal_change <- function(rules_df, participant_index, train_set, minimal_f
   predicted_value = compute_predicted_value(rules)
   rules = rules[order(-abs(rules$coefficient)), ]
   change = find_robust_rules(rules, predicted_value, participant_data)
+  participant_changes = list("changes"=change, "rulesSet"=rules_df, "prediction"=actual_label$liver_fat[[1]], "participantId"=participant_index)
   stop <<- FALSE
-  return(change)
+  return(participant_changes)
 }
