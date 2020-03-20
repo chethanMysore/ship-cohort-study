@@ -30,7 +30,8 @@ getFeatureImportance <- function(req,res) {
                         "Diabetes Level",
                         "Triglycerides during S0 wave"
   )
-  importance_data <- list(importance=x, features=y, featureDescription=y_description)
+  feat_type <- c("original", "original", "original", "evolutionary", "evolutionary", "original", "original", "evolutionary", "evolutionary", "original", "original", "original")
+  importance_data <- list(importance=x, features=y, featureDescription=y_description, featType=feat_type)
   list('response' = importance_data)
 }
 
