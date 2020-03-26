@@ -21,7 +21,6 @@ get_class <- function(prediction){
 
 compute_minimal_change <- function(robust_rules, participant_data, predicted_value){
   minimal_change <<- list()
-  minimal_change$y_change <<- abs(robust_rules$y_change - predicted_value)
   minimal_change$rule_change <<- list()
   map(robust_rules$rules, function(rule){
     feat_change <<- list()
@@ -31,7 +30,7 @@ compute_minimal_change <- function(robust_rules, participant_data, predicted_val
       if(is.factor(actual_value)){
         actual_value = as.numeric(levels(actual_value)[actual_value])
         if(feat$value == "c(\"0\")"){
-          change = abs(actual_value - 0)
+          change = abs(actual_value - 1)
         }
         else if(feat$value == "c(\"1\")"){
           change = abs(actual_value - 1)
@@ -42,7 +41,7 @@ compute_minimal_change <- function(robust_rules, participant_data, predicted_val
       }
       feat_change <<- list.append(feat_change, list("feature"=feat$feature, "value"=change))
     })
-    minimal_change$rule_change <<- list.append(minimal_change$rule_change, list("rule" = rule$description, "minimalChange" = feat_change))
+    minimal_change$rule_change <<- list.append(minimal_change$rule_change, list("rule" = rule$description, "minimalChange" = feat_change,"isSatisfied"=rule$isSatisfied))
   })
   
   return(minimal_change)
@@ -69,7 +68,6 @@ find_robust_rules <- function(rules, predicted_value, participant_data){
         }
       }
       if(get_class(y_value) !=  get_class(predicted_value)){
-        robust_rules$y_change <<- y_value
         stop <<- TRUE
       }
     }
@@ -134,7 +132,7 @@ check_rule <- function(rule, participant_data){
 
 
 compute_predicted_value <- function(rules){
-  prediction_value <<- 0
+  prediction_value <<- 0.84 #y-intercept
   by(rules, 1:nrow(rules), function(rule){
     if(rule$isSatisfied[[1]]){
       prediction_value <<- prediction_value + rule$coefficient[[1]]
@@ -145,7 +143,16 @@ compute_predicted_value <- function(rules){
 
 
 get_minimal_change <- function(rules_df, participant_index, train_set, minimal_feature_set){
-  participant_data <- train_set[participant_index, colnames(train_set) %in% minimal_feature_set]
+  participant_data <- train_set[participant_index, ]
+  participant_data$liver_fat <- NULL
+  part_prob_pred <- predict(ship_study_results$model, participant_data[1,], type="prob")
+  if(part_prob_pred[1, "1"] >= 0.5){
+    part_prob_pred <- part_prob_pred[1, "1"]
+  }
+  else{
+    part_prob_pred <- part_prob_pred[1, "0"]
+  }
+  participant_data <- participant_data[1, colnames(participant_data) %in% minimal_feature_set]
   actual_label <- train_set[participant_index, "liver_fat"];
   rules = parse_rules(rules_df)
   isSatisfied <<- list()
@@ -156,7 +163,7 @@ get_minimal_change <- function(rules_df, participant_index, train_set, minimal_f
   predicted_value = compute_predicted_value(rules)
   rules = rules[order(-abs(rules$coefficient)), ]
   change = find_robust_rules(rules, predicted_value, participant_data)
-  participant_changes = list("changes"=change$rule_change, "rulesSet"=rules_df, "prediction"=actual_label$liver_fat[[1]], "participantId"=participant_index, "yPrediction"=predicted_value, "yChange"=change$y_change)
+  participant_changes = list("changes"=change$rule_change, "rulesSet"=rules_df, "prediction"=actual_label$liver_fat[[1]], "participantId"=participant_index, "yPrediction"=predicted_value, "predictedProb"=part_prob_pred)
   stop <<- FALSE
   return(participant_changes)
 }
