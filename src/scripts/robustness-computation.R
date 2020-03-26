@@ -19,9 +19,11 @@ get_class <- function(prediction){
   }
 }
 
-compute_minimal_change <- function(robust_rules, participant_data){
+compute_minimal_change <- function(robust_rules, participant_data, predicted_value){
   minimal_change <<- list()
-  map(robust_rules, function(rule){
+  minimal_change$y_change <<- abs(robust_rules$y_change - predicted_value)
+  minimal_change$rule_change <<- list()
+  map(robust_rules$rules, function(rule){
     feat_change <<- list()
     map(rule$feat_values[[1]], function(feat){
       actual_value = participant_data[1, feat$feature][[1]]
@@ -40,8 +42,9 @@ compute_minimal_change <- function(robust_rules, participant_data){
       }
       feat_change <<- list.append(feat_change, list("feature"=feat$feature, "value"=change))
     })
-    minimal_change <<- list.append(minimal_change, list("rule" = rule$description, "minimalChange" = feat_change))
+    minimal_change$rule_change <<- list.append(minimal_change$rule_change, list("rule" = rule$description, "minimalChange" = feat_change))
   })
+  
   return(minimal_change)
 }
 
@@ -49,26 +52,29 @@ compute_minimal_change <- function(robust_rules, participant_data){
 find_robust_rules <- function(rules, predicted_value, participant_data){
   y_value <<- predicted_value
   robust_rules <<- list()
+  robust_rules$rules <<- list()
   by(rules, 1:nrow(rules), function(rule){
+    
     if(!stop){
       if(predicted_value > 0.1){
         if((rule$coefficient < 0 && !rule$isSatisfied[[1]]) || (rule$coefficient > 0 && rule$isSatisfied[[1]])){
-          robust_rules <<- list.append(robust_rules, rule)
+          robust_rules$rules <<- list.append(robust_rules$rules, rule)
           y_value <<- predicted_value + rule$coefficient
         }
       }
       else{
         if((rule$coefficient < 0 && rule$isSatisfied[[1]]) || (rule$coefficient > 0 && !rule$isSatisfied[[1]])){
-          robust_rules <<- list.append(robust_rules, rule)
+          robust_rules$rules <<- list.append(robust_rules$rules, rule)
           y_value <<- predicted_value + rule$coefficient
         }
       }
       if(get_class(y_value) !=  get_class(predicted_value)){
+        robust_rules$y_change <<- y_value
         stop <<- TRUE
       }
     }
   })
-  change = compute_minimal_change(robust_rules, participant_data)
+  change = compute_minimal_change(robust_rules, participant_data, predicted_value)
   return(change)
 }
 
@@ -79,7 +85,7 @@ parse_rules <- function(rules_df){
   rule_pattern <- "([a-zA-Z_0-9]*)\\s(<|<=|>|>=|=|.in.)\\s([0-9].[0-9]*|c\\(\\\"[0-1]\\\"\\))"
   feat_pattern <- "([a-zA-Z_0-9]*(?!%in%))"
   value_pattern <- "([0-9]\\.[0-9]*|c\\(\\\"[0-1]\\\"\\))"
-  operator_pattern <- "(<|<=|>|>=|=|.in.)"
+  operator_pattern <- "(<|<=|>|>=|=|%in%)"
   by(rules_df, 1:nrow(rules_df), function(rule){
     feat_values <<- list()
     description = rule$description
@@ -150,7 +156,7 @@ get_minimal_change <- function(rules_df, participant_index, train_set, minimal_f
   predicted_value = compute_predicted_value(rules)
   rules = rules[order(-abs(rules$coefficient)), ]
   change = find_robust_rules(rules, predicted_value, participant_data)
-  participant_changes = list("changes"=change, "rulesSet"=rules_df, "prediction"=actual_label$liver_fat[[1]], "participantId"=participant_index)
+  participant_changes = list("changes"=change$rule_change, "rulesSet"=rules_df, "prediction"=actual_label$liver_fat[[1]], "participantId"=participant_index, "yPrediction"=predicted_value, "yChange"=change$y_change)
   stop <<- FALSE
   return(participant_changes)
 }
