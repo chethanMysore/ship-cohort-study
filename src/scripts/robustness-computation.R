@@ -9,6 +9,12 @@ feature_values <- list()
 res <- TRUE
 prediction_value <- 0
 isSatisfied <- list()
+rule_pattern <- "([a-zA-Z_0-9]*)\\s(<|<=|>|>=|=|.in.)\\s([0-9].[0-9]*|c\\(\\\"[0-1]\\\"\\))"
+feat_pattern <- "([a-zA-Z_0-9]*(?!%in%))"
+value_pattern <- "(\\s[0-9]\\.*[0-9]*|c\\(\\\"[0-1]\\\"\\))"
+operator_pattern <- "(<=|<|>=|>|=|%in%)"
+reformed_rule <- ""
+transformed_rules <- list()
 
 get_class <- function(prediction){
   if(prediction > 0.1){
@@ -77,29 +83,35 @@ find_robust_rules <- function(rules, predicted_value, participant_data){
 }
 
 
-parse_rules <- function(rules_df){
+parse_rules <- function(rules_df, minmax_vals){
+  transformed_rules <<- rules_df
   rules = rules_df
   feature_values <<- list()
-  rule_pattern <- "([a-zA-Z_0-9]*)\\s(<|<=|>|>=|=|.in.)\\s([0-9].[0-9]*|c\\(\\\"[0-1]\\\"\\))"
-  feat_pattern <- "([a-zA-Z_0-9]*(?!%in%))"
-  value_pattern <- "([0-9]\\.[0-9]*|c\\(\\\"[0-1]\\\"\\))"
-  operator_pattern <- "(<|<=|>|>=|=|%in%)"
+
   by(rules_df, 1:nrow(rules_df), function(rule){
     feat_values <<- list()
     description = rule$description
     extracted_rules <- str_extract_all(description, rule_pattern)
-    map(extracted_rules[[1]], function(rule){
-      feature = str_extract(rule, feat_pattern)
-      value = str_extract(rule, value_pattern)
-      if(value != "c(\"0\")" && value != "c(\"1\")"){
-        value = as.numeric(value)
+    reformed_rule <<- ""
+    map(extracted_rules[[1]], function(constraint){
+      feature = str_extract(constraint, feat_pattern)
+      feat_value = str_extract(constraint, value_pattern)
+      feat_value = str_trim(feat_value, side = c("left"))
+      if(feat_value != "c(\"0\")" && feat_value != "c(\"1\")"){
+        feat_value = as.numeric(feat_value)
+        # get original value of the feature using minmax_vals
+        feat_value = feat_value * (minmax_vals[[feature]]$max - minmax_vals[[feature]]$min) + minmax_vals[[feature]]$min
       }
-      operator = str_extract(rule, operator_pattern)
-      feat_values <<- list.append(feat_values, list("feature"=feature, "value"=value, "operator"=operator))
+      operator = str_extract(constraint, operator_pattern)
+      reformed_rule <<- str_c(reformed_rule, " ", feature, " ", operator, " ", feat_value, " ", "&")
+      feat_values <<- list.append(feat_values, list("feature"=feature, "value"=feat_value, "operator"=operator))
     })
+    reformed_rule <<- str_remove_all(reformed_rule, "(^\\s)|(\\s\\&$)")
+    transformed_rules[transformed_rules$description == rule$description, "description"] <<- reformed_rule
     feature_values <<- list.append(feature_values, feat_values)
   })
   rules$feat_values = feature_values
+  rules$description = transformed_rules$description
   return(rules)
 }
 
@@ -142,7 +154,7 @@ compute_predicted_value <- function(rules){
 }
 
 
-get_minimal_change <- function(rules_df, participant_index, train_set, minimal_feature_set){
+get_minimal_change <- function(rules_df, participant_index, train_set, minimal_feature_set, minmax_vals){
   participant_data <- train_set[participant_index, ]
   participant_data$liver_fat <- NULL
   part_prob_pred <- predict(ship_study_results$model, participant_data[1,], type="prob")
@@ -153,8 +165,14 @@ get_minimal_change <- function(rules_df, participant_index, train_set, minimal_f
     part_prob_pred <- part_prob_pred[1, "0"]
   }
   participant_data <- participant_data[1, colnames(participant_data) %in% minimal_feature_set]
+  lapply(minimal_feature_set, function(feature){
+    feat_value = participant_data[[feature]]
+    if(is.numeric(feat_value)){
+      participant_data[[feature]] <<- feat_value * (minmax_vals[[feature]]$max - minmax_vals[[feature]]$min) + minmax_vals[[feature]]$min
+    }
+  })
   actual_label <- train_set[participant_index, "liver_fat"];
-  rules = parse_rules(rules_df)
+  rules = parse_rules(rules_df, minmax_vals)
   isSatisfied <<- list()
   by(rules, 1:nrow(rules), function(rule){
     isSatisfied <<- list.append(isSatisfied, check_rule(rule, participant_data))
@@ -163,7 +181,7 @@ get_minimal_change <- function(rules_df, participant_index, train_set, minimal_f
   predicted_value = compute_predicted_value(rules)
   rules = rules[order(-abs(rules$coefficient)), ]
   change = find_robust_rules(rules, predicted_value, participant_data)
-  participant_changes = list("changes"=change$rule_change, "rulesSet"=rules_df, "prediction"=actual_label$liver_fat[[1]], "participantId"=participant_index, "yPrediction"=predicted_value, "predictedProb"=part_prob_pred)
+  participant_changes = list("changes"=change$rule_change, "rulesSet"=rules, "prediction"=actual_label$liver_fat[[1]], "participantId"=participant_index, "yPrediction"=predicted_value, "predictedProb"=part_prob_pred)
   stop <<- FALSE
   return(participant_changes)
 }

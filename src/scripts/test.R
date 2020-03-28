@@ -109,6 +109,8 @@ sample_df <- sample_df[, -which(colMeans(is.na(sample_df)) > 0.06)]
 ## Impute Data
 sample_df <- impute_dataset(sample_df)
 
+## Get minmax values of each feature
+minmax_vals <- extract_min_max_values(sample_df)
 
 ## Scaling features for all waves
 sample_df <- sample_df%>%

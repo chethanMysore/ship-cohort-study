@@ -8,6 +8,7 @@ feature_list <- list()
 cols_to_remove <- list()
 mutated_cols_to_remove <- list()
 suffix <- "(_s0|_s1|_s2)"
+min_max_vals <<- list()
 
 # select features with suffix
 select_features <- function(feat_name, suffix =  "(_s0|_s1|_s2)"){
@@ -61,4 +62,21 @@ extract_features_with_suffix <- function(data_df, wave_suffix){
   map(col_names, remove_cols, names(mutated_cols_to_remove))
   data_df <- data_df[, !col_names %in% names(cols_to_remove)]
   return(data_df)
+}
+
+
+# extract min, max values from the data columns
+extract_min_max_values <- function(data_df){
+  min_max_vals <<- list()
+  sample_df <- sample_df%>%
+    mutate_at(vars(names(sample_df)[which(sapply(sample_df, is.numeric))])
+              ,(function(x) return((x - min(x)) / (max(x) - min(x)))))
+  numeric_cols <- names(data_df)[which(sapply(data_df, is.numeric))]
+  lapply(numeric_cols, function(col){
+    feature_minmax = list() 
+    feature_minmax$min = min(data_df[, col])
+    feature_minmax$max = max(data_df[, col])
+    min_max_vals[[col]] <<- feature_minmax 
+  })
+  return(min_max_vals)
 }

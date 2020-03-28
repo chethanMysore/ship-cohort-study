@@ -87,7 +87,7 @@ getMinimalChange <- function(req, res){
     feature_imp <- importance(ship_study_results$model$finalModel)
     rules_coeff <- select(feature_imp$baseimps, c("rule", "description", "coefficient"))
     feat_imp <- feature_imp$varimps
-    participant_changes <- get_minimal_change(rules_coeff, participant_id, ship_study_results$train_set, feat_imp$varname)
+    participant_changes <- get_minimal_change(rules_coeff, participant_id, ship_study_results$validation_set, feat_imp$varname, minmax_vals)
     list(status="SUCCESS", code="200", response=participant_changes)
   }, error = function(e){
     list(status="ERROR", code="500", response=e)
