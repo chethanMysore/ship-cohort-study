@@ -1,0 +1,199 @@
+---
+openapi: 3.0.0
+info:
+  description: An R api to provide data for visualization of insights on Hepatic Steatosis
+  title: Ship Study Api
+  version: 1.0.0
+servers:
+- description: Dev server
+  url: http://localhost:3000
+paths:
+  "/getFeatureImportance":
+    get:
+      summary: returns feature importance co-ordinates
+      description: endpoint to fetch feature importance
+      responses:
+        '200':
+          description: A JSON Object with 3 elements. First, x-coords to the importance
+            plot, Second, y-coords to the importance plot, Third, label descriptions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  importance:
+                    type: array
+                    items:
+                      type: number
+                      format: float
+                  features:
+                    type: array
+                    items:
+                      type: number
+                      format: string
+                  featureDescription:
+                    type: array
+                    items:
+                      type: number
+                      format: string
+        '404':
+          description: Feature Importance was not found
+        default:
+          description: Unexpected Error
+  "/getModelPerformance":
+    get:
+      summary: returns model performance
+      description: performance comparisons on test and train sets and returns the
+        various metrics of performance of the model
+      responses:
+        '200':
+          description: A Json object with model performance over train and test sets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trainPerformance:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        accuracy:
+                          type: number
+                          format: float
+                        kappa:
+                          type: number
+                          format: float
+                        positivePredictionValue:
+                          type: number
+                          format: float
+                        negativePredictionValue:
+                          type: number
+                          format: float
+                        sensitivity:
+                          type: number
+                          format: float
+                        specificity:
+                          type: number
+                          format: float
+                        precision:
+                          type: number
+                          format: float
+                        f1:
+                          type: number
+                          format: float
+                  testPerformance:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        accuracy:
+                          type: number
+                          format: float
+                        kappa:
+                          type: number
+                          format: float
+                        positivePredictionValue:
+                          type: number
+                          format: float
+                        negativePredictionValue:
+                          type: number
+                          format: float
+                        sensitivity:
+                          type: number
+                          format: float
+                        specificity:
+                          type: number
+                          format: float
+                        precision:
+                          type: number
+                          format: float
+                        f1:
+                          type: number
+                          format: float
+        '404':
+          description: Model was not found
+        default:
+          description: Unexpected Error
+  "/getIceCoords":
+    post:
+      summary: returns co-ordinates for plotting ICE for a specific feature requested
+      description: endpoint to fetch ICE co-ords
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                feature_name:
+                  type: string
+                  description: feature to be explored using ICE plot
+                  example: frac_class_0_in_neighborhood_s2
+              required: feature_name
+      responses:
+        '200':
+          description: A JSON object with co-ordinates to ice curves of the requested
+            feature
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ice_points:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number
+                        format: float
+                  pdp_points:
+                    type: array
+                    items:
+                      type: number
+                      format: float
+        '404':
+          description: Feature was not found
+        default:
+          description: Unexpected Error
+  "/getMinimalChange":
+    post:
+      summary: returns minimal change for the selected participant such that the prediction changes
+      description: endpoint to fetch minimal change in participant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                participant_id:
+                  type: integer
+                  description: participant to be explored
+                  example: 1
+              required: participant_id
+      responses:
+        '200':
+          description: A JSON object with co-ordinates to ice curves of the requested
+            feature
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ice_points:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number
+                        format: float
+                  pdp_points:
+                    type: array
+                    items:
+                      type: number
+                      format: float
+        '404':
+          description: Feature was not found
+        default:
+          description: Unexpected Error
