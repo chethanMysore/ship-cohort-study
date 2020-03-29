@@ -29,21 +29,19 @@ library(plumber)
 library(jsonlite)
 library(yaml)
 
-source('./scripts/extract-features.R')
-source('./scripts/factor-timestamp.R')
-source('./scripts/data-with-labels.R')
-source('./scripts/grouping-dataframes.R')
-source('./scripts/rule-fit-implementation.R')
-source('./scripts/ShipCohortStudy.R')
-source('./scripts/data_imputation.R')
-source('./scripts/data-sampling.R')
-source('./scripts/ice-implementation.R')
-source('./scripts/api-functions.R')
-
+source('./R/rule-fit-implementation.R')
+source('./R/ShipCohortStudy.R')
+source('./R/ice-implementation.R')
+source('./R/extract-model-performance.R')
+source('./R/api-functions.R')
+source('./R/PreProcessing.R')
+source('./R/pre-processing-functions.R')
+source('./R/robustness-computation.R')
 
 ## Take sample of ship_data dataset
 sample_df <- ship_dataset
 
+preprocessing_result <- PreProcessing$new(sample_df)
 
 ##Remove rows with non-missing values for age_ship_s2
 sample_df <- sample_df[!is.na(sample_df$age_ship_s2), ]
@@ -82,8 +80,6 @@ sample_df <- extract_features_with_suffix(sample_df, "(_s0|_s1|_s2)")
 ## Factor Features
 sample_df <- factor_timestamp(sample_df, "exdate_ship")
 sample_df <- factor_hms(sample_df, "blt_beg")
-
-
 
 ##Remove columns having 5% or more than 5% of missing values(NA)
 sample_df <- sample_df[, -which(colMeans(is.na(sample_df)) > 0.06)]
@@ -154,9 +150,6 @@ gg_miss_var(wave_s0_df, show_pct = TRUE)  #shows percentage of missing values in
 gg_miss_var(wave_s0_df, show_pct = FALSE)  #shows number of missing values in the column
 vis_miss(sample_df)  #visualize missing values
 
-pdp_points <- as.data.frame(ship_ice_plot$pdp)
-str(as.numeric(rownames(pdp_points)))
-str(pdp_points$`ship_ice_plot$pdp`)
 ## Exporting to Excel
 #output_file_path <- getwd()
 #output_file_name <- "sample_df_report.xlsx"
