@@ -1,4 +1,4 @@
-#global variables
+## global variables
 feature_list <- list()
 cols_to_remove <- list()
 mutated_cols_to_remove <- list()
@@ -6,12 +6,29 @@ suffix <- "(_s0|_s1|_s2)"
 min_max_vals <<- list()
 imputed_data_df <- NULL
 
+#' Extract all participants with continuous target variable value
+#' 
+#' @param data_df Data frame
+#'
+#' @return data frame with labels
+#'
+#' @export
+#'
 data_with_labels <- function(data_df){
   shipData_with_labels <- subset(data_df, data_df$liver_fat > 0)
   return(shipData_with_labels)
 }
 
-#function to compute class label from hepatic_steatosis
+#' Compute class label
+#'
+#' Discretize target variable with threshold 0.1
+#'
+#' @param heaptic_steatosis liver fat level recorded in percentage
+#'   
+#' @return class label  
+#'   
+#' @export
+#' 
 calci_classLabel <- function(hepatic_steatosis){
   temp <- c()
   for(value in hepatic_steatosis){
@@ -25,7 +42,15 @@ calci_classLabel <- function(hepatic_steatosis){
   return(temp)
 }
 
-
+#' Extract labels from dataset
+#' 
+#' @param data_df Optional data frame. If not specified, use the labels passed and return computed class labels
+#' @param labels Optional list of liverfat levels. If not specified, use data frame passed to extract labels
+#' 
+#' @return list of class labels
+#' 
+#' @export
+#'
 only_labels <- function(data_df = NULL, labels = NULL){
   shipData_labelTest_1 <- NULL
   if(!is.null(data_df)){
@@ -45,16 +70,34 @@ only_labels <- function(data_df = NULL, labels = NULL){
   return(shipData_labelTest_1)
 }
 
+#' Factor timestamp using POSIXct
+#'
+#' @param data_df data frame
+#' @param col_name feature to factor
+#' 
+#' @return factored data frame
+#' 
+#' @export
+#'
 factor_timestamp <- function(data_df, col_name){
-  sample_df <- data_df %>%
+  data_df <- data_df %>%
     mutate_at(vars(contains(col_name)), (function(x) return(as.numeric(as.POSIXct(x)))))
-  return(sample_df)
+  return(data_df)
 }
 
-factor_hms <- function(data_df_1, col_name_1){
-  sample_df <- data_df_1 %>%
-    mutate_at(vars(contains(col_name_1)), (function(x) return(as.numeric(as_hms(x)))))
-  return(sample_df)
+#' Factor hms column
+#'
+#' @param data_df data frame
+#' @param col_name feature to factor
+#' 
+#' @return factored data frame
+#' 
+#' @export
+#'
+factor_hms <- function(data_df, col_name){
+  data_df <- data_df %>%
+    mutate_at(vars(contains(col_name)), (function(x) return(as.numeric(as_hms(x)))))
+  return(data_df)
 }
 
 factor_liver_fat <- function (data_df, col_name_2){
@@ -63,7 +106,13 @@ factor_liver_fat <- function (data_df, col_name_2){
   return((sample_df))
 }
 
-# select features with suffix
+#' Select features present in all waves
+#'
+#' @param feat_name feature name
+#' @param suffix Optional wave suffix
+#'
+#' @export
+#' 
 select_features <- function(feat_name, suffix =  "(_s0|_s1|_s2)"){
   matched <- str_detect(feat_name, suffix)
   if(matched){
@@ -81,8 +130,13 @@ select_features <- function(feat_name, suffix =  "(_s0|_s1|_s2)"){
   }
 }
 
-
-# drop columns which does not match count = 3
+#' Drop features that are not present in all 3 waves or is 'female_s0'
+#' 
+#' @param feat_name feature name
+#' @param suffix wave suffix
+#'
+#' @export
+#'
 drop_mutated_columns <- function(feat_name, suffix = "(_s0|_s1|_s2)"){
   feat_count <- feature_list[[feat_name]]
   if(feat_count != 3 && feat_name != "female"){ # skip female_s0 feature since it is required for gender analysis
@@ -90,8 +144,13 @@ drop_mutated_columns <- function(feat_name, suffix = "(_s0|_s1|_s2)"){
   }
 }
 
-
-# remove cols from col_names
+#' Drop columns without wave suffix
+#'
+#' @param feat_name feature name
+#' @param unwanted_cols features without wave suffix
+#'
+#' @export
+#'
 remove_cols <- function(feat_name, unwanted_cols){
   feature_name <- str_replace(feat_name, suffix, "")
   if(feature_name %in% unwanted_cols){
@@ -99,7 +158,15 @@ remove_cols <- function(feat_name, unwanted_cols){
   }
 }
 
-# extract all features that are present in all waves/suffix
+#' Extract all features present in all 3 waves
+#' 
+#' @param data_df data frame
+#' @param wave_suffix wave suffix
+#'
+#' @return data frame with features in all 3 waves
+#'
+#' @export
+#'
 extract_features_with_suffix <- function(data_df, wave_suffix){
   suffix <<- wave_suffix
   feature_list <<- list()
@@ -116,13 +183,22 @@ extract_features_with_suffix <- function(data_df, wave_suffix){
   return(data_df)
 }
 
-gender_group_compare <- function (data_df1, data_df2){
-  col_names <- colnames(data_df1)
+#' Group participants based on gender and compare
+#' 
+#' @param male_df data frame with male participants
+#' @param female_df data frame with female participants
+#'
+#' @return list of gender specific features to drop
+#'
+#' @export
+#'
+gender_group_compare <- function (male_df, female_df){
+  col_names <- colnames(male_df)
   cols_to_drop <- list()
   for(col in col_names){
     cloumn <- col
-    male_vals <- as.vector(select(data_df1, col))
-    female_vals <- as.vector(select(data_df2, col))
+    male_vals <- as.vector(select(male_df, col))
+    female_vals <- as.vector(select(female_df, col))
     if((all(is.na(male_vals)) && !all(is.na(female_vals))) || (!all(is.na(male_vals)) && all(is.na(female_vals)))){
       cols_to_drop <- list.append(cols_to_drop, col)
     }
@@ -130,7 +206,14 @@ gender_group_compare <- function (data_df1, data_df2){
   return(cols_to_drop)
 }
 
-# extract min, max values from the data columns
+#' Extract minmax values of all participants
+#'
+#' @param data_df data frame
+#'
+#' @return named list of minmax values of each feature in the data frame
+#'
+#' @export
+#'
 extract_min_max_values <- function(data_df){
   min_max_vals <<- list()
   sample_df <- sample_df%>%
@@ -146,6 +229,12 @@ extract_min_max_values <- function(data_df){
   return(min_max_vals)
 }
 
+#' Impute age_ship_s2 column
+#' 
+#' @param data_df data frame
+#' 
+#' @export
+#'
 impute_ageship <- function(data_df){
   for(row in 1:nrow(data_df)){
     age_ship_s0 <- imputed_data_df[row, "age_ship_s0"]
@@ -161,7 +250,13 @@ impute_ageship <- function(data_df){
   }
 }
 
-## Imputing data with mean and mode
+#' Impute columns of data frame using mean value of the column for numeric features and mode for factors
+#' 
+#' @param colname feature name
+#' @param data_df data frame
+#'
+#' @export
+#' 
 data_imputation <- function(colname, data_df){
   coldata<-as.vector(imputed_data_df[colname][[1]])
   imputed_data<-coldata
@@ -172,6 +267,14 @@ data_imputation <- function(colname, data_df){
   imputed_data_df[colname][[1]] <<- imputed_data
 }
 
+#' Impute columns of data frame using mean value of the column for numeric features and mode for factors
+#' 
+#' @param data_df data frame
+#'
+#' @return imputed data frame
+#'
+#' @export
+#' 
 impute_dataset <- function(data_df){
   imputed_data_df <<- data_df
   
@@ -187,7 +290,16 @@ impute_dataset <- function(data_df){
   return(imputed_data_df)
 }
 
-## sampling of data using stratified k-fold cross validation
+#' Sample dataset using stratified k-fold cross validation
+#' 
+#' @param data_df data frame
+#' @param kfold number of folds for cross validation
+#' @param col_colname feature name
+#'
+#' @return list of fold indices for cross validation
+#'
+#' @export
+#' 
 stratified_sample <- function(data_df, kfolds, cat_colname){
   set.seed(42)
   train <- fold(data_df, k = kfolds, cat_col = cat_colname)

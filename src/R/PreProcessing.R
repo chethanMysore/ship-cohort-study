@@ -1,3 +1,29 @@
+#' PreProcessing class encapsulates the preprocessing tasks performed on the raw dataset
+#' 
+#' Object includes processed dataset after performing feature augmentation, feature selection, scaling and imputation,
+#' gender grouped dataset and minmax values for each feature in the dataset.
+#' 
+#' \code{PreProcessing} performs various data preprocessing tasks based on EDA performed on the dataset
+#' 
+#' @format \code{\link{R6Class}} object.
+#' 
+#' @section Usage:
+#' \preformatted{
+#' pre_processing_result <- PreProcessing$new(data_df)
+#' pre_processing_result$summary()
+#' }
+#'
+#' @section Arguments:
+#' 
+#' For ShipCohortStudy$new(): 
+#' \describe{
+#' \item{data_df: }{('data.frame')\cr
+#' The dataset with continuous target variable
+#' }
+#' }
+#'
+#' @export
+#'
 PreProcessing <- R6::R6Class("PreProcessing", private = list(
     ..data_df = NULL,
     ..raw_data = NULL,
@@ -88,6 +114,13 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       cat("Adding labels back to reformed dataset...\n")
       private$..data_df$liver_fat <- private$..labels[[1]]
     },
+    
+    #' Prints the summary of preprocessing results
+    #'
+    #' Prints the number of observations in the dataset after each step of preprocessing
+    #' 
+    #' @export
+    #'
     summary = function(){
       cat("\n---------------------Data Preprocesing Summary-----------------------\n")
       cat(nrow(private$..raw_data), " instances were observed.\n")

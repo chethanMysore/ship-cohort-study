@@ -42,6 +42,9 @@ source('./R/api-functions.R')
 
   #' Launch App in Dev Mode
   #'
+  #' @param port tcp port number in which the service needs to run
+  #' @param ship_study_results rule fit model results 
+  #'
   #' @export
   launchAppDev <- function(port=3000, ship_study_results){
     pr <- plumber$new()
