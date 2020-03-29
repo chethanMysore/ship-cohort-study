@@ -14,7 +14,7 @@
 ## Usage Example
 
 ```r
-source('./R/api.R')
+source('./src/R/api.R')
 
 # Inspect data
 sample_df <- data_df # import dataset here
