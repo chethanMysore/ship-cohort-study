@@ -1,16 +1,6 @@
 # global variables
 individual_ice_points <- list()
 
-plot_ice <- function(model, dataset, feature_name){
-  ## TO create an object of the type Predictor using the function "
-  model = Predictor$new(model = model, dataset)
-  
-  ##ICE plot
-  effect <- FeatureEffect$new(predictor = model, feature = feature_name, method = "ice")
-  ice_plot <- plot(effect)
-  return(ice_plot$data)
-}
-
 get_individual_ice_points <- function(individual_coords, x_coords){
   if(!is.null(individual_coords)){
     y_coords = as.vector(individual_coords)
@@ -34,4 +24,3 @@ get_ice_points <- function(data, model, feature_name, frac_to_build = 0.2){
   }
   return(list(icePoints = individual_ice_points, pdpPoints = pdp_points, featureName=feature_name))
 }
-
