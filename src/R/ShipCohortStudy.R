@@ -42,7 +42,37 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
   ..validation_set = NULL,
   ..cv_folds = NULL,
   ..model_validation_result = NULL,
-  ..preprocessing_result = NULL
+  ..preprocessing_result = NULL,
+  ..featureDescriptionPath = "./R/ship_dataset_features.json",
+  ..featureDataTypes = c(),
+  
+  #' Map feature descriptions for each critical feature
+  #'
+  #' @param features list of critical features
+  #' 
+  #' @return dictionary of features, descriptions, feature types and data types
+  #' 
+  #' @export
+  #'
+  ..getFeatureDescriptions = function(features){
+    private$..featureDataTypes <- c()
+    featureDescriptions = read_json(path = private$..featureDescriptionPath)
+    featureDescriptions = data.frame(matrix(unlist(featureDescriptions), nrow=length(featureDescriptions), byrow=T))
+    colnames(featureDescriptions) = c("Feature", "Description", "Type")
+    featureDescriptions = featureDescriptions[featureDescriptions$Feature %in% features, ]
+    featureDescriptions = featureDescriptions[order(featureDescriptions$Feature), ]
+    features = as.vector(featureDescriptions$Feature)
+    lapply(features, function(feat){
+      if(is.factor(private$..train_set[[feat]])){
+        private$..featureDataTypes <- append(private$..featureDataTypes, "Factor")
+      }
+      else{
+        private$..featureDataTypes <- append(private$..featureDataTypes, "Numeric")
+      }
+    })
+    featureDescriptions$dataType = private$..featureDataTypes
+    return(featureDescriptions)
+  }
   ),
   public = list(
     initialize = function(data_df, cv_folds = 5){
@@ -150,24 +180,14 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
     #' @export
     #'
     get_feature_importance = function(){
-      feature_imp = pre::importance(private$..rule_fit_model$finalModel)
-      x = feature_imp$varimps$imp
-      y = feature_imp$varimps$varname
-      y_description = c("Somatometric measurements of waist", 
-                         "Glucose",
-                         "Triglycerides during S2 wave",
-                         "Patient's similarity with negative cohort patients",
-                         "Patient's similarity with positive cohort patients",
-                         "Time of lights off during sleep", 
-                         "Serum Uric Acid",
-                         "Characteristic changes in the patient",
-                         "Representativeness of the patient in the cohort group",
-                         "Somatometric measurements of Body Mass Index", 
-                         "Diabetes Level",
-                         "Triglycerides during S0 wave"
-      )
-      feat_type = c("original", "original", "original", "evolutionary", "evolutionary", "original", "original", "evolutionary", "evolutionary", "original", "original", "original")
-      importance_data = list(importance=x, features=y, featureDescription=y_description, featType=feat_type)
+      feature_imp = pre::importance(private$..rule_fit_model$finalModel) 
+      feature_imp$varimps = feature_imp$varimps[order(feature_imp$varimps$varname), ]
+      importance = feature_imp$varimps$imp
+      features = feature_imp$varimps$varname
+      featureDescriptions = private$..getFeatureDescriptions(features)
+      featureDescriptions$Imp = importance
+      featureDescriptions = featureDescriptions[order(featureDescriptions$Description), ]
+      importance_data = list(importance=featureDescriptions$Imp, features=featureDescriptions$Feature, featureDescription=featureDescriptions$Description, featType=featureDescriptions$Type, dataType=featureDescriptions$dataType)
       return(importance_data)
     },
     

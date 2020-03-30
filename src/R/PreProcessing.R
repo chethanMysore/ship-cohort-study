@@ -45,9 +45,8 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       
       ##Remove rows with non-missing values for age_ship_s2
       cat("Removing rows with non-missing values for age_ship_s2...\n")
-      private$..obs_after_ageship <- nrow(private$..data_df)
       private$..data_df <- private$..data_df[!is.na(private$..data_df$age_ship_s2), ]
-      private$..obs_after_ageship <- (private$..obs_after_ageship - nrow(private$..data_df))
+      private$..obs_after_ageship <- nrow(private$..data_df)
 
       ## Removing data without labels
       cat("Removing data without labels...\n")
@@ -92,9 +91,8 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       
       ##Remove columns having 5% or more than 5% of missing values(NA)
       cat("Removing columns having 5% or more than 5% of missing values(NA)...\n")
-      private$..obs_after_missing <- nrow(private$..data_df)
       private$..data_df <- private$..data_df[, -which(colMeans(is.na(private$..data_df)) > private$..missingness_threshold)]
-      private$..obs_after_missing <- (private$..obs_after_missing - nrow(private$..data_df))
+      private$..obs_after_missing <- nrow(private$..data_df)
       
       ## Impute Data
       cat("Imputing Data...\n")
