@@ -572,7 +572,7 @@
 			{
 				"feature name": "lof_s0",
 				"feature description": "Time of lights off during sleep in SHIP-0",
-				"feature type": "Evolution feature"
+				"feature type": "Original feature"
 			},
 			{
 				"feature name": "cluster_rep_s0",
@@ -617,7 +617,7 @@
 			{
 				"feature name": "lof_s1",
 				"feature description": "Time of lights off during sleep in SHIP-1",
-				"feature type": "Evolution feature"
+				"feature type": "Original feature"
 			},
 			{
 				"feature name": "cluster_rep_s1",
@@ -652,7 +652,7 @@
 			{
 				"feature name": "lof_s2",
 				"feature description": "Time of lights off during sleep in SHIP-2",
-				"feature type": "Evolution feature"
+				"feature type": "Original feature"
 			},
 			{
 				"feature name": "cluster_rep_s2",
