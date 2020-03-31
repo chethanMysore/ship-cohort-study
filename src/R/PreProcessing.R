@@ -44,7 +44,7 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       private$..data_df <- data_df
       
       ##Remove rows with non-missing values for age_ship_s2
-      cat("Removing rows with non-missing values for age_ship_s2...\n")
+      cat("Removing rows with missing values for age_ship_s2...\n")
       private$..data_df <- private$..data_df[!is.na(private$..data_df$age_ship_s2), ]
       private$..obs_after_ageship <- nrow(private$..data_df)
 
@@ -66,8 +66,8 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       private$..data_df <- factor_timestamp(private$..data_df, "exdate_ship") # TODO: add checks for column availability
       private$..data_df <- factor_hms(private$..data_df, "blt_beg") # TODO: add checks for column availability
       
-      ##Remove columns having 5% or more than 5% of missing values(NA)
-      cat("Removing columns having 5% or more than 5% of missing values(NA)...\n")
+      ##Remove columns having 6% or more than 6% of missing values(NA)
+      cat("Removing columns having 6% or more than 6% of missing values(NA)...\n")
       private$..data_df <- private$..data_df[, -which(colMeans(is.na(private$..data_df)) > private$..missingness_threshold)]
       
       ## Extracting evolution features
@@ -89,8 +89,8 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       cols_to_remove = list.append(cols_to_remove, "female_s0") # TODO: add checks for column availability
       private$..data_df <- private$..data_df[,!names(private$..data_df) %in% cols_to_remove]
       
-      ##Remove columns having 5% or more than 5% of missing values(NA)
-      cat("Removing columns having 5% or more than 5% of missing values(NA)...\n")
+      ##Remove columns having 6% or more than 6% of missing values(NA)
+      cat("Removing columns having 6% or more than 6% of missing values(NA)...\n")
       private$..data_df <- private$..data_df[, -which(colMeans(is.na(private$..data_df)) > private$..missingness_threshold)]
       private$..obs_after_missing <- nrow(private$..data_df)
       
