@@ -89,7 +89,7 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       cols_to_remove = list.append(cols_to_remove, "female_s0") # TODO: add checks for column availability
       private$..data_df <- private$..data_df[,!names(private$..data_df) %in% cols_to_remove]
       
-      ##Remove columns having 6% or more than 6% of missing values(NA)
+      ##Remove columns having 6% or more than 6 % of missing values(NA)
       cat("Removing columns having 6% or more than 6% of missing values(NA)...\n")
       private$..data_df <- private$..data_df[, -which(colMeans(is.na(private$..data_df)) > private$..missingness_threshold)]
       private$..obs_after_missing <- nrow(private$..data_df)
