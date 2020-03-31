@@ -1,10 +1,9 @@
 ## Install missing packages and import
-dependencies_list <- c("evoxploit", "tidyverse", "checkmate", "rlist","hash", "hms", "ggplot2", "visdat","naniar","xlsx", "pre", "caret", "R6", "DescTools", "groupdata2","devtools", "iml", "ICEbox", "jsonlite", "yaml")
+dependencies_list <- c("tidyverse", "checkmate", "rlist","hash", "hms", "ggplot2", "visdat","naniar","xlsx", "pre", "caret", "R6", "DescTools", "groupdata2","devtools", "iml", "ICEbox", "jsonlite", "yaml")
 missing_packages_list <- dependencies_list[!(dependencies_list %in% installed.packages()[,"Package"])]
 if(length(missing_packages_list)) install.packages(missing_packages_list)
 
 ## Import required libraries
-library(evoxploit)
 library(tidyverse)
 library(checkmate)
 library(rlist)
@@ -22,9 +21,13 @@ library(groupdata2)
 library(iml)
 library(ICEbox)
 library(devtools)
+if(!c("evoxploit") %in% installed.packages()[,"Package"]){
+  install_github("unmnn/evoxploit")
+}
 if(!c("plumber") %in% installed.packages()[,"Package"]){
   install_github("trestletech/plumber")
 }
+library(evoxploit)
 library(plumber)
 library(jsonlite)
 library(yaml)
