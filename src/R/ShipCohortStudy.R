@@ -43,7 +43,7 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
   ..cv_folds = NULL,
   ..model_validation_result = NULL,
   ..preprocessing_result = NULL,
-  ..featureDescriptionPath = "./R/ship_dataset_features.json",
+  ..featureDescriptionPath = "./src/R/ship_dataset_features.json",
   ..featureDataTypes = c(),
   
   #' Map feature descriptions for each critical feature

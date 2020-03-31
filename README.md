@@ -11,6 +11,15 @@
 * Analyse the minimal change in the participant such that the predicted class label changes. 
 * Identify the minimal set of evolution features that would result in better predictive performance.
 
+## Running Application
+
+ - Navigate to cloned repository / project directory and run the following command
+```cmd
+Rscript src/R/app.R <input_dataset_path>
+```
+ - The model building might take from 15 to 30 miins depending on the machine performance. 
+ - After running the above command, the api service will be available from http://localhost:3000/__swagger__/
+
 ## Usage Example
 
 ```r

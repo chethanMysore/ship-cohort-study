@@ -30,14 +30,14 @@ library(jsonlite)
 library(yaml)
 
 ## Source required classes and functions
-source('./R/pre-processing-functions.R')
-source('./R/PreProcessing.R')
-source('./R/rule-fit-implementation.R')
-source('./R/ice-implementation.R')
-source('./R/extract-model-performance.R')
-source('./R/robustness-computation.R')
-source('./R/ShipCohortStudy.R')
-source('./R/api-functions.R')
+source('./src/R/pre-processing-functions.R')
+source('./src/R/PreProcessing.R')
+source('./src/R/rule-fit-implementation.R')
+source('./src/R/ice-implementation.R')
+source('./src/R/extract-model-performance.R')
+source('./src/R/robustness-computation.R')
+source('./src/R/ShipCohortStudy.R')
+source('./src/R/api-functions.R')
 
 
   #' Launch App in Dev Mode
@@ -70,7 +70,7 @@ source('./R/api-functions.R')
     })
     
     pr$run(port=port, swagger=function(pr, spec, ...){
-      spec <- yaml::read_yaml("./R/swagger.yaml")
+      spec <- yaml::read_yaml("./src/R/swagger.yaml")
       spec
     })
   }
