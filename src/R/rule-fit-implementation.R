@@ -1,3 +1,16 @@
+#' Rule Fit Implementation
+#' 
+#' Use caret_pre_model to build Prediction Rule Ensembles (PRE). Train Control is achieved using caret's trainControl to specify hyper parameters 
+#'
+#' @param data_df data frame without class labels column
+#' @param class_labels class labels
+#' @param train_index Optional specifies fold indices for cross validation
+#' @param cv_folds Optional specifies number of folds for cross validation
+#' 
+#' @return rulefit model
+#' 
+#' @export
+#'
 rule_fit <- function(data_df, class_labels, train_index = NULL, cv_folds = 5){
   rulefit_result <- NULL;
   # set sampling method to cross validation with 5-folds

@@ -1,4 +1,4 @@
-#Global Variables
+## Global Variables
 minimal_change <- list()
 feat_change <- list()
 y_value <- 0
@@ -16,6 +16,14 @@ operator_pattern <- "(<=|<|>=|>|=|%in%)"
 reformed_rule <- ""
 transformed_rules <- list()
 
+#' Get class label from continuous prediction using a threshold 0.1
+#'
+#' @param prediction continuous y-prediction value
+#'
+#' @return 1 if prediction > 0.1 and 0 otherwise
+#' 
+#' @export
+#'
 get_class <- function(prediction){
   if(prediction > 0.1){
     return(1)
@@ -25,6 +33,15 @@ get_class <- function(prediction){
   }
 }
 
+#' Compute Minimal Changes in feature values based on rule changes
+#'
+#' @param robust_rules rules that needs to be changed in order ti change the model prediction. i.e., if the rule is satisfied, it needs to be dissatisfied and vice versa
+#' @param participant_data data frame with participant's original feature values
+#' @param predicted_value predicted y-value of the model for the participant
+#' 
+#' @return named list of minmal changes with rule, changes in each feature associated with the rule and whether the rule was initially satisfied by the participant
+#'
+#' @export
 compute_minimal_change <- function(robust_rules, participant_data, predicted_value){
   minimal_change <<- list()
   minimal_change$rule_change <<- list()
@@ -53,7 +70,16 @@ compute_minimal_change <- function(robust_rules, participant_data, predicted_val
   return(minimal_change)
 }
 
-
+#' Find robust rules i.e., the rules that needs to be changed for the model prediction for the participant to change
+#'
+#' @param rules data frame of rules, their description and coefficient observed in the rulefit model
+#' @param predicted_value y-prediction of the model for the participant
+#' @param participant_data data frame with participant's original feature values
+#' 
+#' @return named list of minmal changes with rule, changes in each feature associated with the rule and whether the rule was initially satisfied by the participant
+#' 
+#' @export
+#' 
 find_robust_rules <- function(rules, predicted_value, participant_data){
   y_value <<- predicted_value
   robust_rules <<- list()
@@ -82,7 +108,15 @@ find_robust_rules <- function(rules, predicted_value, participant_data){
   return(change)
 }
 
-
+#' Parse Rules to replace scaled values of features with original values and extract operators and features for comparison with participant data
+#' 
+#' @param rules_df data frame of rules, their description and coefficient observed in the rulefit model
+#' @param minmax_vals minmax values for each column, used to find the original value of the feature from scaled value
+#' 
+#' @return data frame with parsed rules 
+#' 
+#' @export
+#' 
 parse_rules <- function(rules_df, minmax_vals){
   transformed_rules <<- rules_df
   rules = rules_df
@@ -115,24 +149,39 @@ parse_rules <- function(rules_df, minmax_vals){
   return(rules)
 }
 
-perform_operation <- function(val1, val2, operator){
-  if(val2 == "c(\"0\")"){
-    val2 = c(0)
+#' Perform operation to compare the rule chunk and the participant data
+#'
+#' @param part_value participant feature value
+#' @param rule_value feature value in rule chunk
+#' 
+#' @export
+#' 
+perform_operation <- function(part_value, rule_value, operator){
+  if(rule_value == "c(\"0\")"){
+    rule_value = c(0)
   }
-  else if(val2 == "c(\"1\")"){
-    val2 = c(1)
+  else if(rule_value == "c(\"1\")"){
+    rule_value = c(1)
   }
   switch (operator,
-    "<" = return(val1 < val2),
-    ">" = return(val1 > val2),
-    "<=" = return(val1 <= val2),
-    ">=" = return(val1 >= val2),
-    "%in%" = return(val1 %in% val2),
-    "_in_" = return(val1 %in% val2)
+    "<" = return(part_value < rule_value),
+    ">" = return(part_value > rule_value),
+    "<=" = return(part_value <= rule_value),
+    ">=" = return(part_value >= rule_value),
+    "%in%" = return(part_value %in% rule_value),
+    "_in_" = return(part_value %in% rule_value)
   )
 }
 
-
+#' Check whether the rulw is satisfied by the participant
+#' 
+#' @param rule rule to compare
+#' @param participant_data data frame with participant's original feature values
+#' 
+#' @return TRUE if satisfied, FALSE otherwise
+#' 
+#' @export
+#'
 check_rule <- function(rule, participant_data){
   res <<- TRUE
   map(rule$feat_values[[1]], function(feat){
@@ -142,7 +191,14 @@ check_rule <- function(rule, participant_data){
   return(res)
 }
 
-
+#' Compute Predicted y-value from the rulefit model
+#'
+#' @param rules_df data frame of rules, their description and coefficient observed in the rulefit model
+#'
+#' @return continuous y-prediction value
+#'   
+#' @export
+#'
 compute_predicted_value <- function(rules){
   prediction_value <<- 0.84 #y-intercept
   by(rules, 1:nrow(rules), function(rule){
@@ -153,7 +209,18 @@ compute_predicted_value <- function(rules){
   return(prediction_value)
 }
 
-
+#' Get minimal change for each feature value of the participant given the model and set of rules derived from the model
+#'
+#' @param rules_df data frame of rules, their description and coefficient observed in the rulefit model
+#' @param participant_index row number of the participant for whom the minimal change needs to be calculated
+#' @param train_set training set used in model building
+#' @param minimal_feature_set list of critical features derived from the rulefit model
+#' @param minimax_vals named list of minmax values for each feature in the dataset
+#' 
+#' @return dictionary of particpant changes including rules derived from the model
+#' 
+#' @export
+#'
 get_minimal_change <- function(rules_df, participant_index, train_set, minimal_feature_set, minmax_vals){
   participant_data <- train_set[participant_index, ]
   participant_data$liver_fat <- NULL

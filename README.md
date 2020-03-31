@@ -11,27 +11,14 @@
 * Analyse the minimal change in the participant such that the predicted class label changes. 
 * Identify the minimal set of evolution features that would result in better predictive performance.
 
-## Usage Example
+## Running Application
 
-```r
-source('./src/R/api.R')
-
-# Inspect data
-sample_df <- data_df # import dataset here
-
-# Create ShipCohortStudy object
-ship_study_results <- ShipCohortStudy$new(sample_df)
-
-# print summary
-ship_study_results$summary()
+ - Navigate to cloned repository / project directory and run the following command
+```cmd
+Rscript src/R/app.R <input_dataset_path>
 ```
-
-![Feature-Importance](src/docs/images/feature-importance-plot.png)
-
-```r
-# launch api
-launchAppDev(port = 3000, ship_study_results = ship_study_results)
-```
+ - The model building might take from 15 to 30 mins depending on the machine performance. 
+ - After running the above command, the api service will be available from http://localhost:3000/__swagger__/
 
 ![Ship-Study-Api](src/docs/images/ship-study-api.png)
 

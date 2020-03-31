@@ -1,3 +1,29 @@
+#' PreProcessing class encapsulates the preprocessing tasks performed on the raw dataset
+#' 
+#' Object includes processed dataset after performing feature augmentation, feature selection, scaling and imputation,
+#' gender grouped dataset and minmax values for each feature in the dataset.
+#' 
+#' \code{PreProcessing} performs various data preprocessing tasks based on EDA performed on the dataset
+#' 
+#' @format \code{\link{R6Class}} object.
+#' 
+#' @section Usage:
+#' \preformatted{
+#' pre_processing_result <- PreProcessing$new(data_df)
+#' pre_processing_result$summary()
+#' }
+#'
+#' @section Arguments:
+#' 
+#' For ShipCohortStudy$new(): 
+#' \describe{
+#' \item{data_df: }{('data.frame')\cr
+#' The dataset with continuous target variable
+#' }
+#' }
+#'
+#' @export
+#'
 PreProcessing <- R6::R6Class("PreProcessing", private = list(
     ..data_df = NULL,
     ..raw_data = NULL,
@@ -19,9 +45,8 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       
       ##Remove rows with non-missing values for age_ship_s2
       cat("Removing rows with non-missing values for age_ship_s2...\n")
-      private$..obs_after_ageship <- nrow(private$..data_df)
       private$..data_df <- private$..data_df[!is.na(private$..data_df$age_ship_s2), ]
-      private$..obs_after_ageship <- (private$..obs_after_ageship - nrow(private$..data_df))
+      private$..obs_after_ageship <- nrow(private$..data_df)
 
       ## Removing data without labels
       cat("Removing data without labels...\n")
@@ -66,9 +91,8 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       
       ##Remove columns having 5% or more than 5% of missing values(NA)
       cat("Removing columns having 5% or more than 5% of missing values(NA)...\n")
-      private$..obs_after_missing <- nrow(private$..data_df)
       private$..data_df <- private$..data_df[, -which(colMeans(is.na(private$..data_df)) > private$..missingness_threshold)]
-      private$..obs_after_missing <- (private$..obs_after_missing - nrow(private$..data_df))
+      private$..obs_after_missing <- nrow(private$..data_df)
       
       ## Impute Data
       cat("Imputing Data...\n")
@@ -88,6 +112,13 @@ PreProcessing <- R6::R6Class("PreProcessing", private = list(
       cat("Adding labels back to reformed dataset...\n")
       private$..data_df$liver_fat <- private$..labels[[1]]
     },
+    
+    #' Prints the summary of preprocessing results
+    #'
+    #' Prints the number of observations in the dataset after each step of preprocessing
+    #' 
+    #' @export
+    #'
     summary = function(){
       cat("\n---------------------Data Preprocesing Summary-----------------------\n")
       cat(nrow(private$..raw_data), " instances were observed.\n")

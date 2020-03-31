@@ -1,3 +1,32 @@
+#' ShipCohortStudy encapsulates the model building task, model analysis tasks and participant analysis tasks achieved on SHIP dataset
+#' 
+#' Object includes evolutionary features extracted using evoxploit, training set, validation set, original dataset passed, rulefit model built and preprocessing result.
+#' Object also exposes several methods for performing various analysis tasks on the participant data using the built model
+#' 
+#' \code{ShipCohortStudy} builds rulefit model on dataset and returns model results
+#' 
+#' @format \code{\link{R6Class}} object.
+#' 
+#' @section Usage:
+#' \preformatted{
+#' ship_study_results <- ShipCohortStudy$new(data_df)
+#' ship_study_results$summary()
+#' }
+#'
+#' @section Arguments:
+#' 
+#' For ShipCohortStudy$new(): 
+#' \describe{
+#' \item{data_df: }{('data.frame')\cr
+#' The dataset with discrete class labels, without null values(NAs), scaled feature values 
+#' }
+#' \item{cv_folds: }{('num')\cr
+#' (optional) The number of folds for cross validation
+#' }
+#' }
+#'
+#' @export
+#'
 ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
   ..wave_suffix = "(_s0|_s1|_s2)",
   ..labels = NULL,
@@ -13,7 +42,37 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
   ..validation_set = NULL,
   ..cv_folds = NULL,
   ..model_validation_result = NULL,
-  ..preprocessing_result = NULL
+  ..preprocessing_result = NULL,
+  ..featureDescriptionPath = "./src/R/ship_dataset_features.json",
+  ..featureDataTypes = c(),
+  
+  #' Map feature descriptions for each critical feature
+  #'
+  #' @param features list of critical features
+  #' 
+  #' @return dictionary of features, descriptions, feature types and data types
+  #' 
+  #' @export
+  #'
+  ..getFeatureDescriptions = function(features){
+    private$..featureDataTypes <- c()
+    featureDescriptions = read_json(path = private$..featureDescriptionPath)
+    featureDescriptions = data.frame(matrix(unlist(featureDescriptions), nrow=length(featureDescriptions), byrow=T))
+    colnames(featureDescriptions) = c("Feature", "Description", "Type")
+    featureDescriptions = featureDescriptions[featureDescriptions$Feature %in% features, ]
+    featureDescriptions = featureDescriptions[order(featureDescriptions$Feature), ]
+    features = as.vector(featureDescriptions$Feature)
+    lapply(features, function(feat){
+      if(is.factor(private$..train_set[[feat]])){
+        private$..featureDataTypes <- append(private$..featureDataTypes, "Factor")
+      }
+      else{
+        private$..featureDataTypes <- append(private$..featureDataTypes, "Numeric")
+      }
+    })
+    featureDescriptions$dataType = private$..featureDataTypes
+    return(featureDescriptions)
+  }
   ),
   public = list(
     initialize = function(data_df, cv_folds = 5){
@@ -68,6 +127,13 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
         private$..best_tuning_params$cv_folds <- private$..cv_folds
       }  
     },
+    
+    #' Prints summary of the rulefit model
+    #'
+    #' Prints model performance evaluated against various metrics and best tuning parameters observed
+    #' 
+    #' @export
+    #'
     summary = function(){
       cat("\n---------------------RuleFit Model Summary-----------------------\n")
       cat(nrow(private$..data_df_with_evo), " instances were observed.\n")
@@ -93,31 +159,44 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
         # importance(private$..rule_fit_model$finalModel)
       }
     },
+    
+    #' Get co-ordinates for ICE plot
+    #'
+    #' @param feature_name feature name
+    #' 
+    #' @returns named list of ice points and pdp points for the plot
+    #' 
+    #' @export
+    #'
     get_ice_coords = function(feature_name){
       ice_coords = get_ice_points(private$..rule_fit_model$finalModel$data, private$..rule_fit_model, feature_name = feature_name, frac_to_build = 0.27)
       return(ice_coords)
     },
+    
+    #' Get points for feature importance plot
+    #'
+    #' @return Returns critical set of features and their corresponding importance values observed from the rulefit model
+    #' 
+    #' @export
+    #'
     get_feature_importance = function(){
-      feature_imp = pre::importance(private$..rule_fit_model$finalModel)
-      x = feature_imp$varimps$imp
-      y = feature_imp$varimps$varname
-      y_description = c("Somatometric measurements of waist", 
-                         "Glucose",
-                         "Triglycerides during S2 wave",
-                         "Patient's similarity with negative cohort patients",
-                         "Patient's similarity with positive cohort patients",
-                         "Time of lights off during sleep", 
-                         "Serum Uric Acid",
-                         "Characteristic changes in the patient",
-                         "Representativeness of the patient in the cohort group",
-                         "Somatometric measurements of Body Mass Index", 
-                         "Diabetes Level",
-                         "Triglycerides during S0 wave"
-      )
-      feat_type = c("original", "original", "original", "evolutionary", "evolutionary", "original", "original", "evolutionary", "evolutionary", "original", "original", "original")
-      importance_data = list(importance=x, features=y, featureDescription=y_description, featType=feat_type)
+      feature_imp = pre::importance(private$..rule_fit_model$finalModel) 
+      feature_imp$varimps = feature_imp$varimps[order(feature_imp$varimps$varname), ]
+      importance = feature_imp$varimps$imp
+      features = feature_imp$varimps$varname
+      featureDescriptions = private$..getFeatureDescriptions(features)
+      featureDescriptions$Imp = importance
+      featureDescriptions = featureDescriptions[order(featureDescriptions$Description), ]
+      importance_data = list(importance=featureDescriptions$Imp, features=featureDescriptions$Feature, featureDescription=featureDescriptions$Description, featType=featureDescriptions$Type, dataType=featureDescriptions$dataType)
       return(importance_data)
     },
+    
+    #' Get model performance results
+    #' 
+    #' @return Returns named list of performance results of the model on test and training sets
+    #' 
+    #' @export
+    #' 
     get_model_performance = function(){
       model_performance = extract_model_performance(private$..rule_fit_model, private$..train_set, private$..validation_set)
       train_results = model_performance$train_performance
@@ -146,6 +225,15 @@ ShipCohortStudy <- R6::R6Class("ShipCohortStudy", private = list(
       ))
       return(performance_results)
     },
+    
+    #' Get minimal change in a participant so that the class prediction changes
+    #' 
+    #' @param participant_id row number of the participant in the training set used to build the model
+    #' 
+    #' @return dictionary of rules and the feature changes associated with it so that the participant's prediction changes
+    #'
+    #' @export
+    #'
     get_minimal_change = function(participant_id){
       feature_imp = importance(private$..rule_fit_model$finalModel)
       rules_coeff = select(feature_imp$baseimps, c("rule", "description", "coefficient"))

@@ -1,3 +1,13 @@
+#' Extract Model Performance
+#'
+#' @param model rulefit model
+#' @param train_set training set used during model building
+#' @param validation_set validation set
+#' 
+#' @return dictionary of training performance and test performance of the model
+#' 
+#' @export
+#'
 extract_model_performance <- function(model, train_set, validation_set){
   ## Validate Model Prediction
   actual_labels <- validation_set$liver_fat

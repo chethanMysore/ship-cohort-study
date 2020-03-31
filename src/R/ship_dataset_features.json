@@ -1,0 +1,697 @@
+[
+			{
+				"feature name": "age_ship_s0",
+				"feature description": "Age of the participant during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "exdate_ship_s0",
+				"feature description": "Date of examination during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "diabetes_s0",
+				"feature description": "Diabetes Level during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "smoking_s0",
+				"feature description": "Smoking status during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "abstain_s0",
+				"feature description": "Abstinence from alcohol (last 12 months) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_bmi_s0",
+				"feature description": "Somatometric Measurements : Body Mass Index during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_tail_s0",
+				"feature description": "Somatometry: waist circumference(cm) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_huef_s0",
+				"feature description": "Somatometric Measurements : Hip during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "blt_beg_s0",
+				"feature description": "Blood sampling start during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hgb_s0",
+				"feature description": "LAB: haemoglobin (mmol/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hba1c_s0",
+				"feature description": "LAB: Hb A1c (%) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "fib_cl_s0",
+				"feature description": "LAB: fibrinogen (Clauss) (g/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "crea_s_s0",
+				"feature description": "Creatinine (Âµmol/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hrs_s_s0",
+				"feature description": "LAB: serum uric acid (Âµmol/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "gluc_s_s0",
+				"feature description": "Glucose (mmol/l) during SHIP-0 ",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "chol_s_s0",
+				"feature description": "Cholesterol (total) (mmol/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "tg_s_s0",
+				"feature description": "Triglycerides (total) (mmol/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hdl_s_s0",
+				"feature description": "HDL - High-density lipoprotein cholesterol (mmol/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "ldl_s_s0",
+				"feature description": "LDL - Low density lipoprotein cholesterol (mmol/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "tsh_s0",
+				"feature description": "LAB: TSH/thyroid-stimulating hormone (mU/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "crea_u_s0",
+				"feature description": "LAB: (urine) creatinine (mmol/l) during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "sd_volg_s0",
+				"feature description": "Thyroid sonography: volume during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "goiter_s0",
+				"feature description": "Goiter during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07a_s0",
+				"feature description": " Beta blockers during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07aa_s0",
+				"feature description": "(Cardioselective) Beta blockers during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07ab_s0",
+				"feature description": " (Non-selective) Beta blockers during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08_s0",
+				"feature description": "Calcium channel blockers during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca01_s0",
+				"feature description": "Amlodipine during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca05_s0",
+				"feature description": "Nifedipine during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca08_s0",
+				"feature description": "Nitrendipine during SHIP-0", 
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08da01_s0",
+				"feature description": "Verapamil during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c09aa02_s0",
+				"feature description": "Enalapril during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c09aa05_s0",
+				"feature description": "Ramipril during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "knoten_s0",
+				"feature description": "Knoten during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "earm_s0",
+				"feature description": "Earm during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_h02a_s0",
+				"feature description": "atc_h02a_s0 during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "alkligt_s0",
+				"feature description": "alkligt_s0 during SHIP-0",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "age_ship_s1",
+				"feature description": "Age of the participant during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "exdate_ship_s1",
+				"feature description": "Date of examination during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "diabetes_s1",
+				"feature description": "Diabetes Level during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "smoking_s1",
+				"feature description": "Smoking status during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "abstain_s1",
+				"feature description": "Abstinence from alcohol (last 12 months) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_bmi_s1",
+				"feature description": "Somatometric Measurements : Body Mass Index during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_tail_s1",
+				"feature description": "Somatometry: waist circumference(cm) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_huef_s1",
+				"feature description": "Somatometric Measurements : Hip during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "blt_beg_s1",
+				"feature description": "Blood sampling start during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hgb_s1",
+				"feature description": "LAB: haemoglobin (mmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hba1c_s1",
+				"feature description": "LAB: Hb A1c (%) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "fib_cl_s1",
+				"feature description": "LAB: fibrinogen (Clauss) (g/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "crea_s_s1",
+				"feature description": "Creatinine (Âµmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hrs_s_s1",
+				"feature description": "LAB: serum uric acid (Âµmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "gluc_s_s1",
+				"feature description": "Glucose (mmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "chol_s_s1",
+				"feature description": "Cholesterol (total) (mmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "tg_s_s1",
+				"feature description": "Triglycerides (total) (mmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hdl_s_s1",
+				"feature description": "HDL - High-density lipoprotein cholesterol (mmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "ldl_s_s1",
+				"feature description": "LDL - Low density lipoprotein cholesterol (mmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "tsh_s1",
+				"feature description": "LAB: TSH/thyroid-stimulating hormone (mU/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "crea_u_s1",
+				"feature description": "LAB: (urine) creatinine (mmol/l) during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "sd_volg_s1",
+				"feature description": "Thyroid sonography: volume during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "goiter_s1",
+				"feature description": "Goiter during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07a_s1",
+				"feature description": " Beta blockers during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07aa_s1",
+				"feature description": "(Cardioselective) Beta blockers during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07ab_s1",
+				"feature description": " (Non-selective) Beta blockers during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08_s1",
+				"feature description": "Calcium channel blockers during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca01_s1",
+				"feature description": "Amlodipine during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca05_s1",
+				"feature description": "Nifedipine during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca08_s1",
+				"feature description": "Nitrendipine during SHIP-1", 
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08da01_s1",
+				"feature description": "Verapamil during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c09aa02_s1",
+				"feature description": "Enalapril during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c09aa05_s1",
+				"feature description": "Ramipril during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "knoten_s1",
+				"feature description": "Knoten during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "earm_s1",
+				"feature description": "Earm during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_h02a_s1",
+				"feature description": "atc_h02a_s1 during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "alkligt_s1",
+				"feature description": "alkligt_s1 during SHIP-1",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "age_ship_s2",
+				"feature description": "Age of the participant during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "exdate_ship_s2",
+				"feature description": "Date of examination during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "diabetes_s2",
+				"feature description": "Diabetes Level during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "smoking_s2",
+				"feature description": "Smoking status during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "abstain_s2",
+				"feature description": "Abstinence from alcohol (last 12 months) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_bmi_s2",
+				"feature description": "Somatometric Measurements : Body Mass Index during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_tail_s2",
+				"feature description": "Somatometry: waist circumference(cm) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "som_huef_s2",
+				"feature description": "Somatometric Measurements : Hip during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "blt_beg_s2",
+				"feature description": "Blood sampling start during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hgb_s2",
+				"feature description": "LAB: haemoglobin (mmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hba1c_s2",
+				"feature description": "LAB: Hb A1c (%) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "fib_cl_s2",
+				"feature description": "LAB: fibrinogen (Clauss) (g/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "crea_s_s2",
+				"feature description": "Creatinine (Âµmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hrs_s_s2",
+				"feature description": "LAB: serum uric acid (Âµmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "gluc_s_s2",
+				"feature description": "Glucose (mmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "chol_s_s2",
+				"feature description": "Cholesterol (total) (mmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "tg_s_s2",
+				"feature description": "Triglycerides (total) (mmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "hdl_s_s2",
+				"feature description": "HDL - High-density lipoprotein cholesterol (mmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "ldl_s_s2",
+				"feature description": "LDL - Low density lipoprotein cholesterol (mmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "tsh_s2",
+				"feature description": "LAB: TSH/thyroid-stimulating hormone (mU/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "crea_u_s2",
+				"feature description": "LAB: (urine) creatinine (mmol/l) during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "sd_volg_s2",
+				"feature description": "Thyroid sonography: volume during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "goiter_s2",
+				"feature description": "Goiter during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07a_s2",
+				"feature description": " Beta blockers during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07aa_s2",
+				"feature description": "(Cardioselective) Beta blockers during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c07ab_s2",
+				"feature description": " (Non-selective) Beta blockers during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08_s2",
+				"feature description": "Calcium channel blockers during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca01_s2",
+				"feature description": "Amlodipine during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca05_s2",
+				"feature description": "Nifedipine during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08ca08_s2",
+				"feature description": "Nitrendipine during SHIP-2", 
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c08da01_s2",
+				"feature description": "Verapamil during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c09aa02_s2",
+				"feature description": "Enalapril during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_c09aa05_s2",
+				"feature description": "Ramipril during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "knoten_s2",
+				"feature description": "Knoten during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "earm_s2",
+				"feature description": "Earm during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "atc_h02a_s2",
+				"feature description": "atc_h02a_s1 during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "alkligt_s2",
+				"feature description": "alkligt_s1 during SHIP-2",
+				"feature type": "Original Feature"
+			},
+			{
+				"feature name": "cluster_idx_s0",
+				"feature description": "Group ID of similar set of participants during SHIP-0",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "cluster_idx_s1",
+				"feature description": "Group ID of similar set of participants during SHIP-1",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "cluster_idx_s2",
+				"feature description": "Group ID of similar set of participants during SHIP-2",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "lof_s0",
+				"feature description": "Time of lights off during sleep in SHIP-0",
+				"feature type": "Original feature"
+			},
+			{
+				"feature name": "cluster_rep_s0",
+				"feature description": "Cluster_rep_s0 during SHIP-0",
+				"feature type": "Evolution feature"
+			},			
+			{
+				"feature name": "dist_to_rep_s0",
+				"feature description": "Dist_to_rep_s0 during SHIP-0",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "path_length_to_rep_s0",
+				"feature description": "Path_length_to_rep_s0 during SHIP-0",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "dist_to_centroid_s0",
+				"feature description": "Difference between a participant and the avg participant of the group during SHIP-0",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "dist_to_medoid_s0",
+				"feature description": "Representativeness of the patient in the cohort group during SHIP-0",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "frac_class_1_in_neighborhood_s0",
+				"feature description": "Patient's similarity with positive cohort patients during SHIP-0",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "frac_class_0_in_neighborhood_s0",
+				"feature description": "Patient's similarity with negative cohort patients during SHIP-0",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "silhouette_s0",
+				"feature description": "Representativeness of the patient in the cohort group during SHIP-0",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "lof_s1",
+				"feature description": "Time of lights off during sleep in SHIP-1",
+				"feature type": "Original feature"
+			},
+			{
+				"feature name": "cluster_rep_s1",
+				"feature description": "Cluster_rep_s1 during SHIP-1",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "dist_to_centroid_s1",
+				"feature description": "Difference between a participant and the avg participant of the group during SHIP-1",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "dist_to_medoid_s1",
+				"feature description": "Representativeness of the patient in the cohort group during SHIP-1",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "frac_class_0_in_neighborhood_s1",
+				"feature description": "Patient's similarity with negative cohort patients during SHIP-1",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "frac_class_1_in_neighborhood_s1",
+				"feature description": "Patient's similarity with positive cohort patients during SHIP-1",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "silhouette_s1",
+				"feature description": "Representativeness of the patient in the cohort group during SHIP-1",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "lof_s2",
+				"feature description": "Time of lights off during sleep in SHIP-2",
+				"feature type": "Original feature"
+			},
+			{
+				"feature name": "cluster_rep_s2",
+				"feature description": "Cluster_rep_s2 during SHIP-2",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "dist_to_rep_s2",
+				"feature description": "Dist_to_rep_s2 during SHIP-2",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "path_length_to_rep_s2",
+				"feature description": "Path_length_to_rep_s2 during SHIP-2",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "dist_to_centroid_s2",
+				"feature description": "Difference between a participant and the avg participant of the group during SHIP-2",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "dist_to_medoid_s2",
+				"feature description": "Representativeness of the patient in the cohort group during SHIP-2",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "frac_class_1_in_neighborhood_s2",
+				"feature description": "Patient's similarity with positive cohort patients during SHIP-2",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "frac_class_0_in_neighborhood_s2",
+				"feature description": "Patient's similarity with negative cohort patients during SHIP-2",
+				"feature type": "Evolution feature"
+			},
+			{
+				"feature name": "silhouette_s2",
+				"feature description": "Representativeness of the patient in the cohort group during SHIP-2",
+				"feature type": "Evolution feature"
+			}
+]
