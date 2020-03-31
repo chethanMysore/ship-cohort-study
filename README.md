@@ -17,7 +17,7 @@
 ```cmd
 Rscript src/R/app.R <input_dataset_path>
 ```
- - The model building might take from 15 to 30 miins depending on the machine performance. 
+ - The model building might take from 15 to 30 mins depending on the machine performance. 
  - After running the above command, the api service will be available from http://localhost:3000/__swagger__/
 
 ## Usage Example
