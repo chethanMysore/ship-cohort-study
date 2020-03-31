@@ -20,28 +20,6 @@ Rscript src/R/app.R <input_dataset_path>
  - The model building might take from 15 to 30 mins depending on the machine performance. 
  - After running the above command, the api service will be available from http://localhost:3000/__swagger__/
 
-## Usage Example
-
-```r
-source('./src/R/api.R')
-
-# Inspect data
-sample_df <- data_df # import dataset here
-
-# Create ShipCohortStudy object
-ship_study_results <- ShipCohortStudy$new(sample_df)
-
-# print summary
-ship_study_results$summary()
-```
-
-![Feature-Importance](src/docs/images/feature-importance-plot.png)
-
-```r
-# launch api
-launchAppDev(port = 3000, ship_study_results = ship_study_results)
-```
-
 ![Ship-Study-Api](src/docs/images/ship-study-api.png)
 
 ## Bibliography

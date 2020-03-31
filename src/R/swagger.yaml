@@ -5,16 +5,17 @@ info:
   title: Ship Study Api
   version: 1.0.0
 servers:
-- description: Dev server
-  url: http://localhost:3000
+  - description: Dev server
+    url: http://localhost:3000
 paths:
   "/getFeatureImportance":
     get:
       summary: returns feature importance co-ordinates
       description: endpoint to fetch feature importance
       responses:
-        '200':
-          description: A JSON Object with 3 elements. First, x-coords to the importance
+        "200":
+          description:
+            A JSON Object with 3 elements. First, x-coords to the importance
             plot, Second, y-coords to the importance plot, Third, label descriptions
           content:
             application/json:
@@ -36,17 +37,18 @@ paths:
                     items:
                       type: number
                       format: string
-        '404':
+        "404":
           description: Feature Importance was not found
         default:
           description: Unexpected Error
   "/getModelPerformance":
     get:
       summary: returns model performance
-      description: performance comparisons on test and train sets and returns the
+      description:
+        performance comparisons on test and train sets and returns the
         various metrics of performance of the model
       responses:
-        '200':
+        "200":
           description: A Json object with model performance over train and test sets
           content:
             application/json:
@@ -111,7 +113,7 @@ paths:
                         f1:
                           type: number
                           format: float
-        '404':
+        "404":
           description: Model was not found
         default:
           description: Unexpected Error
@@ -132,8 +134,9 @@ paths:
                   example: frac_class_0_in_neighborhood_s2
               required: feature_name
       responses:
-        '200':
-          description: A JSON object with co-ordinates to ice curves of the requested
+        "200":
+          description:
+            A JSON object with co-ordinates to ice curves of the requested
             feature
           content:
             application/json:
@@ -152,7 +155,7 @@ paths:
                     items:
                       type: number
                       format: float
-        '404':
+        "404":
           description: Feature was not found
         default:
           description: Unexpected Error
@@ -173,27 +176,44 @@ paths:
                   example: 1
               required: participant_id
       responses:
-        '200':
-          description: A JSON object with co-ordinates to ice curves of the requested
-            feature
+        "200":
+          description: A json object with minimal changes to a participant values and respective rules
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  ice_points:
+                  rulesSet:
                     type: array
                     items:
-                      type: array
-                      items:
-                        type: number
-                        format: float
-                  pdp_points:
+                      type: object
+                      properties:
+                        rule:
+                          type: string
+                        description:
+                          type: string
+                        coefficient:
+                          type: string
+                        isSatisfied:
+                          type: boolean
+                  changes:
                     type: array
                     items:
-                      type: number
-                      format: float
-        '404':
+                      type: object
+                      properties:
+                        rule:
+                          type: string
+                        changes:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              feature:
+                                type: string
+                              change:
+                                type: number
+                                format: float
+        "404":
           description: Feature was not found
         default:
           description: Unexpected Error

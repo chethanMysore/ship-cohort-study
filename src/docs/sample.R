@@ -1,4 +1,4 @@
-source('./R/api.R')
+source('./src/R/api.R')
 
 ## Import dataset into ship_dataset
 sample_df <- ship_dataset
