@@ -2,7 +2,8 @@
 
 ## Overview
 
-**ShipCohortStudy** is a project aimed at using Interpretable Machine Learning to understand participant evolution in longitudinal cohort study data. **ShipStudyApi** is a restful service that exposes http endpoints to visualize the results of **rulefit** model built on **SHIP dataset**. Additionally, **evoxploit** package is used to augment the dataset with evolutionary features (Niemann et al., 2015) and rules extracted from building random forest on the dataset (Friedman et al., 2008). The feature selection is then performed using Least Absolute Shrinkage and Selection Operator(LASSO) to obtain minimal set of important features (Friedman et al., 2009). 
+**ShipCohortStudy** is a project aimed at using Interpretable Machine Learning to understand participant evolution in longitudinal cohort study data. **ShipStudyApi** is a restful service that exposes http endpoints to visualize the results of **rulefit** model built on **SHIP dataset**. Additionally, **evoxploit** package is used to augment the dataset with evolutionary features (Niemann et al., 2015) and rules extracted from building random forest on the dataset (Friedman et al., 2008). The feature selection is then performed using Least Absolute Shrinkage and Selection Operator(LASSO) to obtain minimal set of important features (Friedman et al., 2009). The api caters to a visualization dashboard that explores the model results dynamically and interactively.<br/>
+[Checkout Dashboard Here](https://github.com/chethanMysore/ship-study-ui)
 
 ## Tasks
 
